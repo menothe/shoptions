@@ -1,14 +1,13 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func NewDatabase() (*sql.DB, error) {
+func NewDatabase() (*gorm.DB, error) {
 	dsn := "host=localhost user=postgres password=shoptions dbname=shoptions port=5432 sslmode=disable TimeZone=America/Los_Angeles"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
@@ -17,13 +16,5 @@ func NewDatabase() (*sql.DB, error) {
 		return nil, err
 	}
 
-	sqlDB, err := db.DB()
-
-	if err != nil {
-		fmt.Println("Failed to connect to database:", err)
-		return nil, err
-	}
-	defer sqlDB.Close()
-
-	return sqlDB, nil
+	return db, nil
 }
