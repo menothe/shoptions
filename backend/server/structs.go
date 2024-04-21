@@ -17,13 +17,8 @@ type Server struct {
 	DB     *gorm.DB
 }
 
-type ListingEmbed struct {
-	gorm.Model
-	ListingID uuid.UUID `gorm:"primary_key"` // Unique identifier for a new listing
-}
-
 type Listing struct {
-	ListingEmbed
+	ListingID     uuid.UUID `gorm:"primary_key"` // Unique identifier for a new listing
 	Category      string    `json:"category"`
 	Title         string    `json:"title"`                      // Title of the item being auctioned.
 	Description   string    `json:"description"`                // Detailed description of the item.
@@ -32,8 +27,9 @@ type Listing struct {
 	CurrentPrice  float64   `json:"current_price"`              // Current highest bid on the auction (initially same as starting_price).
 	EndTime       time.Time `json:"end_time"`                   // Date and time when the auction ends.
 	Active        bool      `json:"active" gorm:"default:true"` // Boolean indicating whether the listing is currently active or inactive
-	UserID        uuid.UUID `json:"seller_id"`                  // User ID of the seller who created the listing.
-	User          User
+	SellerID      uuid.UUID `json:"seller_id"`                  // User ID of the seller who created the listing.
+	CreatedAt     time.Time `json:"created_at"`                 // when the listing was created
+	UpdatedAt     time.Time `json:"updated_at"`                 // when the listing was last updated
 }
 
 type User struct {
@@ -48,16 +44,9 @@ type User struct {
 	UpdatedAt    time.Time `json:"updated_at"`                                     // when the user was updated
 }
 
-type BidEmbed struct {
-	gorm.Model
-	BidID uuid.UUID `gorm:"primary_key"` // unique bid id
-}
-
 type Bid struct {
-	BidEmbed
-	Amount    float64   `json:"amount"`     // Bid amount placed by the user.
-	ListingID uuid.UUID `json:"listing_id"` // ID of the auction listing the bid is placed on.
-	Listing   Listing
-	UserID    uuid.UUID `json:"bidder_id"` // Bidder ID of the bidder who placed the bid.
-	User      User
+	BidID     uuid.UUID `gorm:"primary_key"` // unique bid id
+	Amount    float64   `json:"amount"`      // Bid amount placed by the user.
+	ListingID uuid.UUID `json:"listing_id"`  // ID of the auction listing the bid is placed on.
+	BidderID  uuid.UUID `json:"bidder_id"`   // Bidder ID of the bidder who placed the bid.
 }

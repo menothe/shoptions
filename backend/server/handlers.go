@@ -60,11 +60,11 @@ func (s *Server) signup(c *gin.Context) {
 	// get email/password off request body
 
 	var body struct {
-		Email     string
-		Password  string
-		FirstName string
-		LastName  string
-		Username  string
+		Email     string `json:"email"`
+		Password  string `json:"password"`
+		FirstName string `json:"first_name"`
+		LastName  string `json:"last_name"`
+		Username  string `json:"username"`
 	}
 
 	if err := c.BindJSON(&body); err != nil {
@@ -74,6 +74,7 @@ func (s *Server) signup(c *gin.Context) {
 		return
 	}
 
+	fmt.Println("hello there, this is the body: ", body)
 	// hash the password
 	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
 
