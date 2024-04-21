@@ -1,6 +1,6 @@
 # What is it
 
-This is a bare bones Gin project for listing auctions. Currently there are two supported endpoints for creating and obtaining item listings. The items are stored in memory at the moment.
+This is a bare bones Gin project for listing auctions. Currently there are two supported endpoints for creating and obtaining item listings. The items are stored using GORM for relational management.
 
 ## How to use
 

@@ -21,6 +21,27 @@ func NewServer(router *gin.Engine) *Server {
 	}
 }
 
+// Users
+
+func (s *Server) createUser(c *gin.Context) {
+	var newUser User
+
+	if err := c.BindJSON(&newUser); err != nil {
+		return
+	}
+
+	result := s.DB.Create(&newUser)
+
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		c.IndentedJSON(http.StatusInternalServerError, newUser)
+		return
+	}
+	c.IndentedJSON(http.StatusCreated, newUser)
+}
+
+// Listings
+
 func (s *Server) getListings(c *gin.Context) {
 	var listings []Listing
 
