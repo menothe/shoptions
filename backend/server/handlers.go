@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/menothe/shoptions/database"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func NewServer(router *gin.Engine) *Server {
@@ -19,25 +22,6 @@ func NewServer(router *gin.Engine) *Server {
 		Router: router,
 		DB:     db,
 	}
-}
-
-// Users
-
-func (s *Server) createUser(c *gin.Context) {
-	var newUser User
-
-	if err := c.BindJSON(&newUser); err != nil {
-		return
-	}
-
-	result := s.DB.Create(&newUser)
-
-	if result.Error != nil {
-		fmt.Println(result.Error)
-		c.IndentedJSON(http.StatusInternalServerError, newUser)
-		return
-	}
-	c.IndentedJSON(http.StatusCreated, newUser)
 }
 
 // Listings
@@ -70,4 +54,57 @@ func (s *Server) createListing(c *gin.Context) {
 		return
 	}
 	c.IndentedJSON(http.StatusCreated, newListing)
+}
+
+func (s *Server) signup(c *gin.Context) {
+	// get email/password off request body
+
+	var body struct {
+		Email     string
+		Password  string
+		FirstName string
+		LastName  string
+		Username  string
+	}
+
+	if err := c.BindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to read request body",
+		})
+		return
+	}
+
+	// hash the password
+	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to return hashed password",
+		})
+		return
+	}
+
+	// create the user
+	newUser := User{
+		UserID:       uuid.New(),
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
+		Email:        body.Email,
+		PasswordHash: string(hash),
+		Username:     body.Username,
+		FirstName:    body.FirstName,
+		LastName:     body.LastName,
+	}
+
+	result := s.DB.Create(&newUser)
+
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to create user",
+		})
+		return
+	}
+
+	// respond
+	c.JSON(http.StatusOK, gin.H{})
 }

@@ -36,19 +36,16 @@ type Listing struct {
 	User          User
 }
 
-type UserEmbed struct {
-	gorm.Model
-	UserID uuid.UUID `gorm:"primary_key"` // Unique identifier for each user
-}
-
 type User struct {
-	UserEmbed
-	FirstName    string    `json:"first_name"`                           // User first name
-	LastName     string    `json:"last_name"`                            // User last name
-	Username     string    `json:"username" gorm:"unique"`               // Username for login (should be unique).
-	Email        string    `json:"email" gorm:"unique"`                  // User's email address (should be unique).
-	PasswordHash string    `json:"password_hash"`                        // Hashed password for secure storage.
-	Listings     []Listing `json:"listings" gorm:"foreignKey:ListingID"` // the listings for this particular user
+	UserID       uuid.UUID `gorm:"primary_key"`                                    // Unique identifier for each user
+	FirstName    string    `json:"first_name"`                                     // User first name
+	LastName     string    `json:"last_name"`                                      // User last name
+	Username     string    `json:"username" gorm:"unique"`                         // Username for login (should be unique).
+	Email        string    `json:"email" gorm:"unique"`                            // User's email address (should be unique).
+	PasswordHash string    `json:"password_hash"`                                  // Hashed password for secure storage.
+	Listings     []Listing `json:"listings,omitempty" gorm:"foreignKey:ListingID"` // the listings for this particular user
+	CreatedAt    time.Time `json:"created_at"`                                     // when the user was created
+	UpdatedAt    time.Time `json:"updated_at"`                                     // when the user was updated
 }
 
 type BidEmbed struct {
