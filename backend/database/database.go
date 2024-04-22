@@ -1,15 +1,21 @@
 package database
 
 import (
+	"errors"
 	"fmt"
+	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func NewDatabase() (*gorm.DB, error) {
-	dsn := "host=localhost user=postgres password=shoptions dbname=shoptions port=5432 sslmode=disable TimeZone=America/Los_Angeles"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	// Get the value of an environment variable
+	dbHost := os.Getenv("DB_HOST")
+	if dbHost == "" {
+		return nil, errors.New("unable to establish database connetion; DB_HOST not set")
+	}
+	db, err := gorm.Open(postgres.Open(dbHost), &gorm.Config{})
 
 	if err != nil {
 		fmt.Println("Failed to initialize database session:", err)
