@@ -9,9 +9,10 @@ import (
 func (s *Server) SetupRoutes() {
 	s.Router.POST("/signup", s.signup)
 	s.Router.POST("/login", s.login)
+	s.Router.GET("/validate", s.requireAuth, s.validate)
 
-	// s.Router.GET("/listings", s.getListings)
-	// s.Router.POST("/listing", s.createListing)
+	s.Router.GET("/listings", s.getListings)
+	s.Router.POST("/listing", s.createListing)
 
 	s.Router.Run("localhost:8080")
 }
