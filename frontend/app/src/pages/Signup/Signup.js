@@ -18,7 +18,15 @@ const Signup = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch("http://localhost:8080/signup")
+        fetch("http://localhost:8080/signup", {
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            mode: "no-cors",
+            headers: {
+              "Content-Type": "application/json",
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify(userInfo), // body data type must match "Content-Type" header
+          })
             .then(res => {
         console.log('jhello ', res);
         })
