@@ -110,7 +110,10 @@ func (s *Server) signup(c *gin.Context) {
 	}
 
 	// respond
-	c.JSON(http.StatusOK, gin.H{})
+	c.Writer.WriteHeader(http.StatusOK)
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+	})
 }
 
 func (s *Server) login(c *gin.Context) {

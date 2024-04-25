@@ -17,6 +17,7 @@ func main() {
 		return
 	}
 	router := gin.Default()
+	router.Use(gin.Logger())
 	router.Use(cors.Default())
 
 	ApplicationServer := server.NewServer(router)
