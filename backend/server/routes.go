@@ -12,8 +12,8 @@ func (s *Server) SetupRoutes() {
 	s.Router.POST("/logout", s.logout)
 	s.Router.GET("/validate", s.requireAuth, s.validate)
 
-	s.Router.GET("/listings", s.getListings)
-	s.Router.POST("/listing", s.createListing)
+	s.Router.POST("/listing", s.requireAuth, s.createListing)
+	s.Router.GET("/listings", s.requireAuth, s.getListings)
 
 	s.Router.Run("localhost:8080")
 }

@@ -11,11 +11,12 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import FormHelperText from '@mui/material/FormHelperText';
+import InputFileUpload from './FileUpload';
 
 export default function FormDialog() {
   const [open, setOpen] = React.useState(false);
   const [values, setValues] = React.useState({
-    numberformat: '',
+    value: '',
   });
 
   const getCurrentTimePlusNumberOfDays = n => {
@@ -37,12 +38,11 @@ export default function FormDialog() {
     return formattedDate;
   }
   const [durationData, setDuration] = React.useState({
-    duration: 3,
-    listingEndTime: getCurrentTimePlusNumberOfDays(3)
+    duration: 0,
+    listingEndTime: getCurrentTimePlusNumberOfDays(1)
   });
 
   const handleChangeDuration = (event) => {
-    console.log("event: ", event);
     setDuration({
       duration: event.target.value,
       listingEndTime: getCurrentTimePlusNumberOfDays(event.target.value)
@@ -91,7 +91,7 @@ export default function FormDialog() {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
-            console.log(formJson);
+            console.log("form data: ", formJson);
             handleClose();
           },
         }}
@@ -121,12 +121,12 @@ export default function FormDialog() {
             rows={4}
             variant="standard"
           />
-          <div style={{ marginTop: 10 }}>
+          <div style={{ marginTop: 10, display: "flex" }}>
             <TextField
               label="Starting Price"
-              value={values.numberformat}
+              value={values.value}
               onChange={handleChangePrice}
-              name="numberformat"
+              name="price"
               id="formatted-numberformat-input"
               InputProps={{
                 inputComponent: NumericFormatCustom,
@@ -149,8 +149,9 @@ export default function FormDialog() {
               </Select>
               <FormHelperText>Select listing duration</FormHelperText>
             </FormControl>
-            <p>Your listing will end on <b style={{ color: "red" }}>{durationData.listingEndTime}</b></p>
+            {durationData.duration ? <p style={{ marginLeft: "10%", width: "30%" }}>Your listing will end on <b style={{ color: "red" }}>{durationData.listingEndTime}</b></p> : null}
           </div>
+          <InputFileUpload />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
