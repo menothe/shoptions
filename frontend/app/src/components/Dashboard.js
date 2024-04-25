@@ -4,7 +4,6 @@ const Dashboard = () => {
     return (
         <div>
             <NavBar loggedIn={true} />
-            <span>DASHBOARD</span>
         </div>
     )
 }
