@@ -110,7 +110,6 @@ func (s *Server) signup(c *gin.Context) {
 	}
 
 	// respond
-	c.Writer.WriteHeader(http.StatusOK)
 	c.JSON(http.StatusOK, gin.H{
 		"status": "success",
 	})
@@ -175,6 +174,14 @@ func (s *Server) login(c *gin.Context) {
 	// send it back
 	c.JSON(http.StatusOK, gin.H{})
 
+}
+
+func (s *Server) logout(c *gin.Context) {
+	// Clear the JWT cookie by setting it to an empty value and setting its expiration to a past time
+	c.SetCookie("Authorization", "", -1, "", "", false, true)
+
+	// Respond with a success message
+	c.JSON(http.StatusOK, gin.H{"message": "User logged out successfully"})
 }
 
 func (s *Server) validate(c *gin.Context) {

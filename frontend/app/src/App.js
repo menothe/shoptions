@@ -12,6 +12,7 @@ function App() {
         <Route path="/" element={<NavBar loggedIn={false} />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<SignIn />} />
+        <Route path="/logout" element={<NavBar loggedIn={false} />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>

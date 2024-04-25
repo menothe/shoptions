@@ -9,6 +9,7 @@ import (
 func (s *Server) SetupRoutes() {
 	s.Router.POST("/signup", s.signup)
 	s.Router.POST("/login", s.login)
+	s.Router.POST("/logout", s.logout)
 	s.Router.GET("/validate", s.requireAuth, s.validate)
 
 	s.Router.GET("/listings", s.getListings)
