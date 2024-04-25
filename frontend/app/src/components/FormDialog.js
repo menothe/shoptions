@@ -5,6 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { NumericFormat } from 'react-number-format';
 
 export default function FormDialog() {
   const [open, setOpen] = React.useState(false);
@@ -15,6 +16,17 @@ export default function FormDialog() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const [values, setValues] = React.useState({
+    numberformat: '',
+  });
+
+  const handleChange = (event) => {
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value,
+    });
   };
 
   const styles = {
@@ -43,8 +55,7 @@ export default function FormDialog() {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
-            const email = formJson.email;
-            console.log(email);
+            console.log(formJson);
             handleClose();
           },
         }}
@@ -56,7 +67,7 @@ export default function FormDialog() {
             required
             margin="dense"
             id="title"
-            name="email"
+            name="title"
             label="Title"
             type="text"
             fullWidth
@@ -68,9 +79,21 @@ export default function FormDialog() {
             margin="dense"
             fullWidth
             id="description"
+            name="description"
             label="Description"
             multiline
             rows={4}
+            variant="standard"
+          />
+          <TextField
+            label="Starting Price"
+            value={values.numberformat}
+            onChange={handleChange}
+            name="numberformat"
+            id="formatted-numberformat-input"
+            InputProps={{
+              inputComponent: NumericFormatCustom,
+            }}
             variant="standard"
           />
         </DialogContent>
@@ -82,3 +105,29 @@ export default function FormDialog() {
     </React.Fragment>
   );
 }
+
+
+
+const NumericFormatCustom = React.forwardRef(
+  function NumericFormatCustom(props, ref) {
+    const { onChange, ...other } = props;
+
+    return (
+      <NumericFormat
+        {...other}
+        getInputRef={ref}
+        onValueChange={(values) => {
+          onChange({
+            target: {
+              name: props.name,
+              value: values.value,
+            },
+          });
+        }}
+        thousandSeparator
+        valueIsNumericString
+        prefix="$"
+      />
+    );
+  },
+);
