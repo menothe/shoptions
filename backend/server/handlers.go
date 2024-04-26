@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -42,23 +43,35 @@ func (s *Server) getListings(c *gin.Context) {
 }
 
 func (s *Server) createListing(c *gin.Context) {
-	var newListing Listing
+	body, _ := io.ReadAll(c.Request.Body)
+	println(string(body))
+	log.Println("am i coming")
+	var newListing struct {
+		Title       string    `json:"title"`
+		Description string    `json:"description"`
+		Price       float64   `json:"starting_price"`
+		Category    string    `json:"category"`
+		EndTime     time.Time `json:"end_time"`
+	}
 
 	if err := c.BindJSON(&newListing); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to read request body",
+		})
 		return
 	}
 
-	result := s.DB.Create(&newListing)
+	log.Println("listing request struct: ", newListing)
 
-	if result.Error != nil {
-		fmt.Println(result.Error)
-		c.IndentedJSON(http.StatusInternalServerError, newListing)
-		return
-	}
+	// result := s.DB.Create(&newListing)
+
+	// if result.Error != nil {
+	// 	fmt.Println(result.Error)
+	// 	c.IndentedJSON(http.StatusInternalServerError, newListing)
+	// 	return
+	// }
 	c.IndentedJSON(http.StatusCreated, newListing)
 }
-
-// User Creation, Login, and Authentication
 
 func (s *Server) signup(c *gin.Context) {
 	// get email/password off request body

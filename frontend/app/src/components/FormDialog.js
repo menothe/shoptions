@@ -12,42 +12,29 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import FormHelperText from '@mui/material/FormHelperText';
 import InputFileUpload from './FileUpload';
+import { formatDate, getCurrentTimePlusNumberOfDays } from '../helpers/utils';
 
 export default function FormDialog() {
   const [open, setOpen] = React.useState(false);
   const [values, setValues] = React.useState({
     value: '',
   });
-
-  const getCurrentTimePlusNumberOfDays = n => {
-    const today = new Date(); // Get the current date and time
-    const millisecondsPerDay = 1000 * 60 * 60 * 24; // Milliseconds in a day
-
-    // Add 3 days in milliseconds to the current timestamp
-    const threeDaysInMilliseconds = n * millisecondsPerDay;
-    const futureTime = today.getTime() + threeDaysInMilliseconds;
-
-    // Create a new Date object representing the future time
-    const futureDate = new Date(futureTime);
-
-    // Format the date string for UI display (month name, day, year, time with am/pm)
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"];
-    const formattedDate = `${monthNames[futureDate.getMonth()]} ${futureDate.getDate()}, ${futureDate.getFullYear()} at ${(futureDate.getHours() % 12) || 12}:${futureDate.getMinutes().toString().padStart(2, '0')} ${(futureDate.getHours() >= 12) ? 'PM' : 'AM'}`;
-
-    return formattedDate;
-  }
+  const [category, setCategory] = React.useState("")
   const [durationData, setDuration] = React.useState({
     duration: 0,
-    listingEndTime: getCurrentTimePlusNumberOfDays(1)
+    listingEndTime: formatDate(getCurrentTimePlusNumberOfDays(1))
   });
 
   const handleChangeDuration = (event) => {
     setDuration({
       duration: event.target.value,
-      listingEndTime: getCurrentTimePlusNumberOfDays(event.target.value)
+      listingEndTime: formatDate(getCurrentTimePlusNumberOfDays(event.target.value))
     });
   };
+
+  const handleChangeCategory = (event) => {
+    setCategory(event.target.value)
+  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -91,7 +78,26 @@ export default function FormDialog() {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
-            console.log("form data: ", formJson);
+            const listingEndTime = getCurrentTimePlusNumberOfDays(parseInt(formJson.duration))
+            const newListingRequestBody = {
+              title: formJson.title,
+              description: formJson.description,
+              starting_price: parseFloat(formJson.price.slice(1)), //remove the "$" from the field
+              category: formJson.category,
+              end_time: listingEndTime.toISOString(),
+            };
+            console.log(JSON.stringify(newListingRequestBody));
+            fetch("http://localhost:8080/listing", {
+              method: "POST",
+              mode: "cors",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(newListingRequestBody),
+            })
+              .then(res => {
+                return res.json()
+              }).then(data => console.log(data));
             handleClose();
           },
         }}
@@ -106,17 +112,33 @@ export default function FormDialog() {
             name="title"
             label="Title"
             type="text"
-            fullWidth
             variant="standard"
+            fullWidth
           />
+          <FormControl variant='standard' fullWidth required>
+            <InputLabel id="category">Category</InputLabel>
+            <Select
+              labelId="category"
+              id="category"
+              value={category}
+              label="Category"
+              onChange={handleChangeCategory}
+              name="category"
+            >
+              <MenuItem value={"books"}>Books</MenuItem>
+              <MenuItem value={"electronics"}>Electronics</MenuItem>
+              <MenuItem value={"collectibles"}>Collectibles</MenuItem>
+              <MenuItem value={"apparel"}>Apparel</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             autoFocus
             required
             margin="dense"
-            fullWidth
             id="description"
             name="description"
             label="Description"
+            fullWidth
             multiline
             rows={4}
             variant="standard"
@@ -132,8 +154,9 @@ export default function FormDialog() {
                 inputComponent: NumericFormatCustom,
               }}
               variant="standard"
+              required
             />
-            <FormControl variant='standard' sx={{ marginLeft: "10%" }}>
+            <FormControl variant='standard' sx={{ marginLeft: "10%" }} required>
               <InputLabel id="demo-simple-select-label">Duration</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -141,6 +164,7 @@ export default function FormDialog() {
                 value={durationData.duration}
                 label="Duration"
                 onChange={handleChangeDuration}
+                name="duration"
               >
                 <MenuItem value={1}>1 Day</MenuItem>
                 <MenuItem value={3}>3 Days</MenuItem>
@@ -158,7 +182,7 @@ export default function FormDialog() {
           <Button type="submit">Submit</Button>
         </DialogActions>
       </Dialog>
-    </React.Fragment>
+    </React.Fragment >
   );
 }
 
