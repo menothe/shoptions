@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -43,9 +42,6 @@ func (s *Server) getListings(c *gin.Context) {
 }
 
 func (s *Server) createListing(c *gin.Context) {
-	body, _ := io.ReadAll(c.Request.Body)
-	println(string(body))
-	log.Println("am i coming")
 	var newListing struct {
 		Title       string    `json:"title"`
 		Description string    `json:"description"`
@@ -60,8 +56,6 @@ func (s *Server) createListing(c *gin.Context) {
 		})
 		return
 	}
-
-	log.Println("listing request struct: ", newListing)
 
 	// result := s.DB.Create(&newListing)
 
