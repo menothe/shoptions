@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 function Copyright(props) {
     return (
@@ -41,18 +42,19 @@ export default function SignIn() {
             email: data.get('email'),
             password: data.get('password'),
         };
-        fetch("http://localhost:8080/login", {
-            method: "POST",
+        axios.post('http://localhost:8080/login', loginRequestBody, {
+            withCredentials: true, // include credentials in the request
             mode: "cors",
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(loginRequestBody),
         })
-            .then(res => {
-                if (res.status == 200) {
-                    navigate("/dashboard");
-                }
+            .then(response => {
+                console.log(response.data); // handle response data
+                navigate("/dashboard");
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
     };
 

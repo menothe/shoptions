@@ -175,8 +175,8 @@ func (s *Server) login(c *gin.Context) {
 	}
 
 	//set in local storage or cookie, we set in cookie
-	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", tokenString, 3600*24*30, "", "", false, true)
+	c.SetSameSite(http.SameSiteNoneMode)
+	c.SetCookie("Authorization", tokenString, 3600*24*30, "/", "localhost", true, true)
 
 	// send it back
 	c.JSON(http.StatusOK, gin.H{})

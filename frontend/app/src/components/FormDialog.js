@@ -13,6 +13,7 @@ import Select from '@mui/material/Select';
 import FormHelperText from '@mui/material/FormHelperText';
 import InputFileUpload from './FileUpload';
 import { formatDate, getCurrentTimePlusNumberOfDays } from '../helpers/utils';
+import axios from 'axios';
 
 export default function FormDialog() {
   const [open, setOpen] = React.useState(false);
@@ -87,17 +88,19 @@ export default function FormDialog() {
               end_time: listingEndTime.toISOString(),
             };
             console.log(JSON.stringify(newListingRequestBody));
-            fetch("http://localhost:8080/listing", {
-              method: "POST",
+            axios.post('http://localhost:8080/listing', newListingRequestBody, {
+              withCredentials: true, // include credentials in the request
               mode: "cors",
               headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
               },
-              body: JSON.stringify(newListingRequestBody),
             })
-              .then(res => {
-                return res.json()
-              }).then(data => console.log(data));
+              .then(response => {
+                console.log(response.data); // handle response data
+              })
+              .catch(error => {
+                console.error('Error:', error);
+              });
             handleClose();
           },
         }}

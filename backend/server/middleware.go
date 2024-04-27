@@ -17,7 +17,6 @@ func (s *Server) requireAuth(c *gin.Context) {
 	if err != nil {
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}
-
 	// Decode/validate it
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
