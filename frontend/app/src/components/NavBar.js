@@ -16,6 +16,7 @@ export default function ButtonAppBar({ loggedIn }) {
         fetch("http://localhost:8080/logout", {
             method: "POST",
             mode: "cors",
+            credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
             },

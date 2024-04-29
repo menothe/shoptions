@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -42,7 +41,7 @@ func (s *Server) getListings(c *gin.Context) {
 }
 
 func (s *Server) createListing(c *gin.Context) {
-	var newListing struct {
+	var requestBody struct {
 		Title       string    `json:"title"`
 		Description string    `json:"description"`
 		Price       float64   `json:"starting_price"`
@@ -50,21 +49,53 @@ func (s *Server) createListing(c *gin.Context) {
 		EndTime     time.Time `json:"end_time"`
 	}
 
-	if err := c.BindJSON(&newListing); err != nil {
+	if err := c.BindJSON(&requestBody); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "failed to read request body",
 		})
 		return
 	}
 
-	// result := s.DB.Create(&newListing)
+	// grab id of user who created the listing off the context
 
-	// if result.Error != nil {
-	// 	fmt.Println(result.Error)
-	// 	c.IndentedJSON(http.StatusInternalServerError, newListing)
-	// 	return
-	// }
-	c.IndentedJSON(http.StatusCreated, newListing)
+	user, exists := c.Get("user")
+
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "user must be logged in to create listing",
+		})
+		return
+	}
+
+	// cast to a User type
+	seller := user.(User)
+
+	newListing := Listing{
+		ListingID:     uuid.New(),
+		Category:      requestBody.Category,
+		Title:         requestBody.Title,
+		Description:   requestBody.Description,
+		StartingPrice: requestBody.Price,
+		EndTime:       requestBody.EndTime,
+		CreatedAt:     time.Now(),
+		UpdatedAt:     time.Now(),
+		UserID:        seller.UserID,
+	}
+
+	result := s.DB.Create(&newListing)
+
+	if result.Error != nil {
+		println("create listing error: ", result.Error.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to create listing",
+		})
+		return
+	}
+
+	// respond
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+	})
 }
 
 func (s *Server) signup(c *gin.Context) {
@@ -139,8 +170,6 @@ func (s *Server) login(c *gin.Context) {
 	// Look up the requested user
 	var user User
 	s.DB.First(&user, "email = ?", credentials.Email)
-
-	fmt.Println("found user: ", user)
 
 	if len(user.UserID) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
