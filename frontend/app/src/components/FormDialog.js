@@ -13,9 +13,9 @@ import Select from '@mui/material/Select';
 import FormHelperText from '@mui/material/FormHelperText';
 import InputFileUpload from './FileUpload';
 import { formatDate, getCurrentTimePlusNumberOfDays } from '../helpers/utils';
-import axios from 'axios';
 
-export default function FormDialog() {
+
+export default function FormDialog({ handleSubmitListing }) {
   const [open, setOpen] = React.useState(false);
   const [values, setValues] = React.useState({
     value: '',
@@ -75,33 +75,9 @@ export default function FormDialog() {
         PaperProps={{
           sx: { width: "50%" },
           component: 'form',
-          onSubmit: (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            const listingEndTime = getCurrentTimePlusNumberOfDays(parseInt(formJson.duration))
-            const newListingRequestBody = {
-              title: formJson.title,
-              description: formJson.description,
-              starting_price: parseFloat(formJson.price.slice(1)), //remove the "$" from the field
-              category: formJson.category,
-              end_time: listingEndTime.toISOString(),
-            };
-            console.log(JSON.stringify(newListingRequestBody));
-            axios.post('http://localhost:8080/listing', newListingRequestBody, {
-              withCredentials: true, // include credentials in the request
-              mode: "cors",
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            })
-              .then(response => {
-                console.log(response.data); // handle response data
-              })
-              .catch(error => {
-                console.error('Error:', error);
-              });
-            handleClose();
+          onSubmit: event => {
+            handleSubmitListing(event);
+            handleClose()
           },
         }}
       >
