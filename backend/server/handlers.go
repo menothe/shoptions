@@ -141,11 +141,15 @@ func (s *Server) signup(c *gin.Context) {
 	result := s.DB.Create(&newUser)
 
 	if result.Error != nil {
+		println("error creating user")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "failed to create user",
 		})
 		return
 	}
+
+	// create cookie for future requests from the client side
+	createCookie(c, newUser.UserID)
 
 	// respond
 	c.JSON(http.StatusOK, gin.H{
@@ -187,25 +191,8 @@ func (s *Server) login(c *gin.Context) {
 		return
 	}
 
-	// Generate a jwt token
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": user.UserID,
-		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
-	})
-
-	// Sign and get the complete encoded token as a string using the secret
-	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
-
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "failed to create token",
-		})
-		return
-	}
-
-	//set in local storage or cookie, we set in cookie
-	c.SetSameSite(http.SameSiteNoneMode)
-	c.SetCookie("Authorization", tokenString, 3600*24*30, "/", "localhost", true, true)
+	// create cookie for future requests from the client
+	createCookie(c, user.UserID)
 
 	// send it back
 	c.JSON(http.StatusOK, gin.H{})
@@ -226,4 +213,26 @@ func (s *Server) validate(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": user,
 	})
+}
+
+func createCookie(c *gin.Context, userID uuid.UUID) {
+	// Generate a jwt token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"sub": userID,
+		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
+	})
+
+	// Sign and get the complete encoded token as a string using the secret
+	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to create token",
+		})
+		return
+	}
+
+	//set in local storage or cookie, we set in cookie
+	c.SetSameSite(http.SameSiteNoneMode)
+	c.SetCookie("Authorization", tokenString, 3600*24*30, "/", "localhost", true, true)
 }

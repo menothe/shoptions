@@ -1,3 +1,6 @@
+import { SERVER_HOST, USER_LOGOUT, USER_LOGIN, USER_SIGNUP } from "../constants";
+import axios from 'axios';
+
 export const formatDate = futureDate => {
     // Format the date string for UI display (month name, day, year, time with am/pm)
     const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -18,3 +21,70 @@ export const getCurrentTimePlusNumberOfDays = n => {
 
     return futureDate;
 }
+
+export const handleLogout = logoutFn => {
+    fetch(SERVER_HOST + USER_LOGOUT, {
+        method: "POST",
+        mode: "cors",
+        credentials: 'include',
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
+        .then(res => {
+            if (res.status == 200) {
+                logoutFn("/");
+            }
+        });
+}
+
+
+export const handleSignupUser = (event, navigateFn) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const signupRequestBody = {
+        email: data.get('email'),
+        password: data.get('password'),
+        username: data.get('username'),
+        first_name: data.get('firstName'),
+        last_name: data.get('lastName'),
+    };
+    fetch(SERVER_HOST + USER_SIGNUP, {
+        method: "POST",
+        credentials: 'include',
+        mode: "cors",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(signupRequestBody),
+    })
+        .then(res => {
+            if (res.status == 200) {
+                navigateFn("/dashboard");
+            }
+        });
+};
+
+export const handleUserSignIn = (event, navigateFn) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const loginRequestBody = {
+        email: data.get('email'),
+        password: data.get('password'),
+    };
+    axios.post(SERVER_HOST + USER_LOGIN, loginRequestBody, {
+        withCredentials: true, // include credentials in the request
+        mode: "cors",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => {
+            if (response.status === 200) {
+                navigateFn("/dashboard");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+};

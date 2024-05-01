@@ -8,25 +8,11 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Link from '@mui/material/Link';
 import { useNavigate } from "react-router-dom";
+import { handleLogout } from '../helpers/utils';
 
 export default function ButtonAppBar({ loggedIn }) {
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        fetch("http://localhost:8080/logout", {
-            method: "POST",
-            mode: "cors",
-            credentials: 'include',
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then(res => {
-                if (res.status == 200) {
-                    navigate("/");
-                }
-            });
-    }
     return (
         <div>
             <Box sx={{ flexGrow: 1 }}>
@@ -53,7 +39,7 @@ export default function ButtonAppBar({ loggedIn }) {
                             </Link>
                         </div>}
                         {loggedIn && <Link href="/logout" color="inherit">
-                            <Button onClick={handleLogout} color="inherit">Logout</Button>
+                            <Button onClick={() => handleLogout(navigate)} color="inherit">Logout</Button>
                         </Link>}
                     </Toolbar>
                 </AppBar>

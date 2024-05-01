@@ -53,23 +53,12 @@ export default function FormDialog({ handleSubmitListing }) {
     });
   };
 
-  const styles = {
-    dialogStyles: {
-      position: "relative",
-      marginTop: 0
-    },
-    formStyles: {
-      width: "50%"
-    }
-  }
-
   return (
     <React.Fragment>
       <Button variant="outlined" onClick={handleClickOpen}>
         Create New Listing
       </Button>
       <Dialog
-        sx={{ ...styles.dialogStyles }}
         open={open}
         onClose={handleClose}
         PaperProps={{

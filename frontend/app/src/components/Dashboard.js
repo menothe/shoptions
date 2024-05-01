@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 import { getCurrentTimePlusNumberOfDays } from '../helpers/utils';
 import axios from 'axios';
 import ActionAreaCard from './ListingCard';
+import { SERVER_HOST, GET_ALL_LISTINGS, CREATE_LISTING } from '../constants';
 
 const Dashboard = () => {
     const [listings, setListings] = useState([]);
-    const getAllListingsEndpoint = "http://localhost:8080/listings";
+    const getAllListingsEndpoint = SERVER_HOST + GET_ALL_LISTINGS;
 
     useEffect(() => {
         axios.get(getAllListingsEndpoint, {
@@ -37,8 +38,7 @@ const Dashboard = () => {
             category: formJson.category,
             end_time: listingEndTime.toISOString(),
         };
-        console.log(JSON.stringify(newListingRequestBody));
-        axios.post('http://localhost:8080/listing', newListingRequestBody, {
+        axios.post(SERVER_HOST + CREATE_LISTING, newListingRequestBody, {
             withCredentials: true, // include credentials in the request
             mode: "cors",
             headers: {
@@ -46,7 +46,6 @@ const Dashboard = () => {
             },
         })
             .then(response => {
-                console.log("response data: ", response.data); // handle response data
                 setListings([...listings, response.data]);
             })
             .catch(error => {

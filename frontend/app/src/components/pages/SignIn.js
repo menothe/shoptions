@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import { handleUserSignIn } from '../../helpers/utils';
 
 function Copyright(props) {
     return (
@@ -35,29 +35,6 @@ const defaultTheme = createTheme();
 export default function SignIn() {
     const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const loginRequestBody = {
-            email: data.get('email'),
-            password: data.get('password'),
-        };
-        axios.post('http://localhost:8080/login', loginRequestBody, {
-            withCredentials: true, // include credentials in the request
-            mode: "cors",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(response => {
-                console.log(response.data); // handle response data
-                navigate("/dashboard");
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    };
-
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
@@ -76,7 +53,7 @@ export default function SignIn() {
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={(e) => handleUserSignIn(e, navigate)} noValidate sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"
                             required

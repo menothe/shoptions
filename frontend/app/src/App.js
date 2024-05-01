@@ -1,8 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import NavBar from './components/NavBar';
-import SignUp from './components/SignUp';
-import SignIn from './components/SignIn';
+import SignUp from './components/pages/SignUp';
+import SignIn from './components/pages/SignIn';
 import Dashboard from './components/Dashboard';
+import EditListing from './components/pages/EditListing';
 function App() {
 
 
@@ -14,7 +15,7 @@ function App() {
         <Route path="/login" element={<SignIn />} />
         <Route path="/logout" element={<NavBar loggedIn={false} />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/update-listing" element={<Dashboard />} />
+        <Route path="/edit-listing" element={<EditListing />} />
       </Routes>
     </Router>
   )
