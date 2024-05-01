@@ -6,7 +6,8 @@ import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import Placeholder from '../images/placeholder-image.jpg';
 
-export default function ActionAreaCard() {
+export default function ActionAreaCard({ listing }) {
+    const { Category, Description, StartingPrice, Title } = listing;
     return (
         <Card sx={{ maxWidth: 345, margin: "20px" }}>
             <CardActionArea>
@@ -18,12 +19,10 @@ export default function ActionAreaCard() {
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                        Placeholder
+                        {Title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore magna
-                        aliqua.
+                        {Description}
                     </Typography>
                 </CardContent>
             </CardActionArea>

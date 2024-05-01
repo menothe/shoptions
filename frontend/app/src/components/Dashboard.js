@@ -1,12 +1,29 @@
 import NavBar from './NavBar';
 import FormDialog from './FormDialog';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getCurrentTimePlusNumberOfDays } from '../helpers/utils';
 import axios from 'axios';
 import ActionAreaCard from './ListingCard';
 
 const Dashboard = () => {
     const [listings, setListings] = useState([]);
+    const getAllListingsEndpoint = "http://localhost:8080/listings";
+
+    useEffect(() => {
+        axios.get(getAllListingsEndpoint, {
+            withCredentials: true,
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                setListings(response.data);
+            })
+            .catch(e => {
+                console.error("err: ", e);
+            })
+    }, [])
 
     const handleCreateListing = event => {
         event.preventDefault();
@@ -47,7 +64,7 @@ const Dashboard = () => {
             <div style={{ ...styles }}>
                 <h1>Listings</h1>
                 <FormDialog handleSubmitListing={handleCreateListing} />
-                <div style={{ display: "flex" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)" }}>
                     {listings.map((listing, index) => {
                         return <ActionAreaCard key={index} listing={listing} />;
                     })}

@@ -14,6 +14,8 @@ func (s *Server) requireAuth(c *gin.Context) {
 	// Get cookie off request
 	tokenString, err := c.Cookie("Authorization")
 
+	println("token string: ", tokenString)
+
 	if err != nil {
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}

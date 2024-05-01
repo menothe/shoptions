@@ -14,6 +14,7 @@ function App() {
         <Route path="/login" element={<SignIn />} />
         <Route path="/logout" element={<NavBar loggedIn={false} />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/update-listing" element={<Dashboard />} />
       </Routes>
     </Router>
   )
