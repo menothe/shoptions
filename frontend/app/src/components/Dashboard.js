@@ -30,6 +30,7 @@ const Dashboard = () => {
         })
             .then(response => {
                 console.log("response data: ", response.data); // handle response data
+                setListings([...listings, response.data]);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -46,11 +47,11 @@ const Dashboard = () => {
             <div style={{ ...styles }}>
                 <h1>Listings</h1>
                 <FormDialog handleSubmitListing={handleCreateListing} />
-                {/* <div>
-                    {listings.map(listing => {
-                        return <ActionAreaCard listing={listing} />;
+                <div style={{ display: "flex" }}>
+                    {listings.map((listing, index) => {
+                        return <ActionAreaCard key={index} listing={listing} />;
                     })}
-                </div> */}
+                </div>
             </div>
         </div>
     )

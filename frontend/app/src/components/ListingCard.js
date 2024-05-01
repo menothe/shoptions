@@ -4,15 +4,16 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
+import Placeholder from '../images/placeholder-image.jpg';
 
 export default function ActionAreaCard() {
     return (
-        <Card sx={{ maxWidth: 345 }}>
+        <Card sx={{ maxWidth: 345, margin: "20px" }}>
             <CardActionArea>
                 <CardMedia
                     component="img"
                     height="140"
-                    image="../static/placeholder-image.jpg"
+                    image={Placeholder}
                     alt="image placeholder"
                 />
                 <CardContent>
