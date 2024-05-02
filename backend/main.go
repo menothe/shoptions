@@ -28,7 +28,6 @@ func main() {
 	router.Use(gin.Logger())
 
 	ApplicationServer := server.NewServer(router)
-	ApplicationServer.RunMigrations()
 	ApplicationServer.SetupRoutes()
 
 	fmt.Println("Server listening at port 8080")
