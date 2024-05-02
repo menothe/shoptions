@@ -5,8 +5,6 @@ import SignIn from './components/pages/SignIn';
 import Dashboard from './components/Dashboard';
 import EditListing from './components/pages/EditListing';
 function App() {
-
-
   return (
     <Router>
       <Routes>

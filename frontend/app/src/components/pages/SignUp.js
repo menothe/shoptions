@@ -13,7 +13,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
-import { SERVER_HOST, USER_SIGNUP } from '../../constants';
 import { handleSignupUser } from '../../helpers/utils';
 
 function Copyright(props) {
