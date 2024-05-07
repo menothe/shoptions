@@ -11,7 +11,7 @@ import (
 )
 
 type ListingService interface {
-	CreateListing(*structs.CreateListingRequestBody, any) error
+	CreateListing(*structs.CreateListingRequestBody, any) (*models.Listing, error)
 	GetAllListings() ([]models.Listing, error)
 }
 
@@ -23,7 +23,7 @@ func NewListingService(db *gorm.DB) *ListingServiceImpl {
 	return &ListingServiceImpl{db}
 }
 
-func (ls *ListingServiceImpl) CreateListing(listingRequest *structs.CreateListingRequestBody, user any) error {
+func (ls *ListingServiceImpl) CreateListing(listingRequest *structs.CreateListingRequestBody, user any) (*models.Listing, error) {
 	// cast the user to a User type
 	seller := user.(models.User)
 
@@ -43,9 +43,9 @@ func (ls *ListingServiceImpl) CreateListing(listingRequest *structs.CreateListin
 	err := ls.DB.Create(&newListing).Error
 
 	if err != nil {
-		return ErrFailedToCreateListing
+		return nil, ErrFailedToCreateListing
 	}
-	return nil
+	return &newListing, nil
 }
 
 func (ls *ListingServiceImpl) GetAllListings() ([]models.Listing, error) {

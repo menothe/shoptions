@@ -34,14 +34,14 @@ func (lh *ListingHandler) CreateListing(c *gin.Context) {
 		})
 		return
 	}
-	err := lh.ListingServiceImpl.CreateListing(&request, user)
+	newListing, err := lh.ListingServiceImpl.CreateListing(&request, user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "failed to create listing",
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{})
+	c.IndentedJSON(http.StatusOK, newListing)
 }
 
 func (lh *ListingHandler) GetAllListings(c *gin.Context) {

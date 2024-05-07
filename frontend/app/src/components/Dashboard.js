@@ -1,14 +1,15 @@
 import NavBar from './NavBar';
 import FormDialog from './FormDialog';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { getCurrentTimePlusNumberOfDays } from '../helpers/utils';
 import axios from 'axios';
 import ActionAreaCard from './ListingCard';
 import { SERVER_HOST, GET_ALL_LISTINGS, CREATE_LISTING } from '../constants';
+import { ListingContext } from '../App';
 
 const Dashboard = () => {
-    const [listings, setListings] = useState([]);
     const getAllListingsEndpoint = SERVER_HOST + GET_ALL_LISTINGS;
+    const [listings, setListings] = useContext(ListingContext);
 
     useEffect(() => {
         axios.get(getAllListingsEndpoint, {
@@ -24,7 +25,7 @@ const Dashboard = () => {
             .catch(e => {
                 console.error("err: ", e);
             })
-    }, [])
+    }, []);
 
     const handleCreateListing = event => {
         event.preventDefault();

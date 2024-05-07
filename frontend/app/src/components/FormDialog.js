@@ -54,7 +54,7 @@ export default function FormDialog({ handleSubmitListing }) {
   };
 
   return (
-    <React.Fragment>
+    <>
       <Button variant="outlined" onClick={handleClickOpen}>
         Create New Listing
       </Button>
@@ -150,7 +150,7 @@ export default function FormDialog({ handleSubmitListing }) {
           <Button type="submit">Submit</Button>
         </DialogActions>
       </Dialog>
-    </React.Fragment >
+    </ >
   );
 }
 
