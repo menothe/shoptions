@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import NavBar from '../../NavBar';
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material';
@@ -9,24 +9,32 @@ export default function EditListing() {
     const { listingID } = useParams();
     const [listings, setListings] = useContext(ListingContext);
     const listing = listings.filter(listing => listing.ListingID === listingID)[0];
+    console.log("listing: ", listing);
+    const [editedListing, setEditedListing] = useState(listing);
+
+    const handleListingFieldChange = (e, field) => {
+        e.preventDefault();
+        setEditedListing({ ...editedListing, [field]: e.target.value });
+    }
 
     return (
         <>
             <NavBar loggedIn={true} />
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <TextField id="standard-basic" label="Title" variant="standard" sx={{ marginBottom: "20px" }} />
+                <TextField id="standard-basic" label="Title" variant="standard" sx={{ marginBottom: "20px" }} value={editedListing.Title} onChange={(e) => handleListingFieldChange(e, "Title")} />
                 <FormControl sx={{ width: "10%", margin: "20px" }}>
-                    <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                    <InputLabel id="demo-simple-select-label">Category</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        // value={}
-                        label="Age"
-                    // onChange={handleChange}
+                        value={editedListing.Category}
+                        label="Category"
+                        onChange={(e) => handleListingFieldChange(e, "Category")}
                     >
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
+                        <MenuItem value={"books"}>Books</MenuItem>
+                        <MenuItem value={"electronics"}>Electronics</MenuItem>
+                        <MenuItem value={"collectibles"}>Collectibles</MenuItem>
+                        <MenuItem value={"apparel"}>Apparel</MenuItem>
                     </Select>
                 </FormControl>
                 <TextField
@@ -34,13 +42,13 @@ export default function EditListing() {
                     label="Description"
                     multiline
                     rows={4}
-                    defaultValue="Default Value" //TODO: replace with listing data
+                    value={editedListing.Description}
+                    onChange={(e) => handleListingFieldChange(e, "Description")}
                 />
                 <div className="field price" style={{ marginTop: 10, display: "flex" }}>
                     <TextField
                         label="Starting Price"
-                        value={42}
-                        onChange={() => console.log("hello")}
+                        value={listing.StartingPrice}
                         name="price"
                         id="formatted-numberformat-input"
                         InputProps={{
@@ -55,9 +63,8 @@ export default function EditListing() {
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        // value={durationData.duration}
+                        value={listing.Duration}
                         label="Duration"
-                        // onChange={handleChangeDuration}
                         name="duration"
                     >
                         <MenuItem value={1}>1 Day</MenuItem>
