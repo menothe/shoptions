@@ -1,6 +1,10 @@
 package structs
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type UserSignupRequestBody struct {
 	Email     string `json:"email"`
@@ -22,4 +26,15 @@ type CreateListingRequestBody struct {
 	Category     string    `json:"category"`
 	EndTime      time.Time `json:"end_time"`
 	ProductImage string    `json:"product_image,omitempty"`
+}
+
+type UpdateListingRequestBody struct {
+	ListingID     uuid.UUID `json:"listing_id"`
+	Title         string    `json:"title"`
+	Description   string    `json:"description"`
+	Category      string    `json:"category"`
+	ProductImage  string    `json:"product_image"`
+	StartingPrice float64   `json:"starting_price"`
+	EndTime       time.Time `json:"end_time"`
+	Active        bool      `json:"active"`
 }

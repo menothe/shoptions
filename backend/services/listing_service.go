@@ -13,6 +13,7 @@ import (
 type ListingService interface {
 	CreateListing(*structs.CreateListingRequestBody, any) (*models.Listing, error)
 	GetAllListings() ([]models.Listing, error)
+	UpdateListing(*structs.UpdateListingRequestBody) error
 }
 
 type ListingServiceImpl struct {
@@ -60,9 +61,37 @@ func (ls *ListingServiceImpl) GetAllListings() ([]models.Listing, error) {
 	return listings, nil
 }
 
+func (ls *ListingServiceImpl) UpdateListing(updateRequest *structs.UpdateListingRequestBody) error {
+	var listing models.Listing
+	result := ls.DB.First(&listing, "listing_id = ?", updateRequest.ListingID)
+
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return ErrRecordNotFound
+	}
+
+	listing.Category = updateRequest.Category
+	listing.Title = updateRequest.Title
+	listing.Description = updateRequest.Description
+	listing.ProductImage = updateRequest.ProductImage
+	listing.StartingPrice = updateRequest.StartingPrice
+	listing.EndTime = updateRequest.EndTime
+	listing.Active = updateRequest.Active
+	listing.UpdatedAt = time.Now()
+
+	result = ls.DB.Save(&listing)
+
+	if result.Error != nil {
+		return ErrFailedUpdateListing
+	}
+
+	return nil
+}
+
 // ERRORS
 
 var (
 	ErrFailedToCreateListing    = errors.New("unable to create new listing")
 	ErrFailedToFetchAllListings = errors.New("unable to return all listings")
+	ErrRecordNotFound           = errors.New("record does not exist")
+	ErrFailedUpdateListing      = errors.New("failure updating listing")
 )

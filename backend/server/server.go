@@ -37,6 +37,7 @@ func (server *Server) SetupRoutes() {
 	server.Router.POST("/logout", server.UserHandler.RequireAuth, server.UserHandler.Logout)
 	server.Router.GET("/validate", server.UserHandler.RequireAuth, server.UserHandler.Validate)
 	server.Router.POST("/listing", server.UserHandler.RequireAuth, server.ListingHandler.CreateListing)
+	server.Router.PUT("/listing", server.UserHandler.RequireAuth, server.ListingHandler.UpdateListing)
 	server.Router.GET("/listings", server.UserHandler.RequireAuth, server.ListingHandler.GetAllListings)
 
 	server.Router.Run("localhost:8080")

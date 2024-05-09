@@ -54,3 +54,30 @@ func (lh *ListingHandler) GetAllListings(c *gin.Context) {
 
 	c.IndentedJSON(http.StatusOK, listings)
 }
+
+func (lh *ListingHandler) UpdateListing(c *gin.Context) {
+	request := structs.UpdateListingRequestBody{}
+	if err := c.BindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to read request body",
+		})
+		return
+	}
+	_, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "user must be logged in to update listings",
+		})
+		return
+	}
+	err := lh.ListingServiceImpl.UpdateListing(&request)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to update listing",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{})
+
+}
