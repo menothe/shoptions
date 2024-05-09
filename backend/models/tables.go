@@ -24,7 +24,6 @@ type Listing struct {
 	EndTime       time.Time
 	Active        bool `gorm:"default:true"`
 	UserID        uuid.UUID
-	Bids          []Bid `gorm:"foreignKey:ListingID"`
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }
@@ -36,8 +35,6 @@ type User struct {
 	Username     string `gorm:"unique"`
 	Email        string `gorm:"unique"`
 	PasswordHash string
-	Listings     []Listing `gorm:"foreignKey:UserID"`
-	Bids         []Bid     `gorm:"foreignKey:UserID"`
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 }
@@ -48,3 +45,7 @@ type Bid struct {
 	ListingID uuid.UUID
 	UserID    uuid.UUID
 }
+
+//user - listing: one to many
+//user - bid: one to many
+//listing - bid: one to many

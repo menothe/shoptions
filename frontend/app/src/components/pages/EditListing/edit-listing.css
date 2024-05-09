@@ -1,0 +1,21 @@
+.edit-listing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.category-field {
+    margin-bottom: 20px;
+}
+
+.field {
+    border: 1px solid orange;
+}
+
+.price {
+    border: 1px solid pink;
+}
+
+.duration {
+    border: 1px solid magenta;
+}

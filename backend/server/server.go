@@ -52,6 +52,7 @@ func RunMigrations(db *gorm.DB) {
 
 	err = db.AutoMigrate(&models.Bid{})
 	HandleMigrationError(err, models.Bid{})
+
 }
 
 func HandleMigrationError(err error, modelType any) {
