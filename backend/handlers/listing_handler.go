@@ -10,6 +10,12 @@ import (
 	"gorm.io/gorm"
 )
 
+type ListingHandlerBehavior interface {
+	CreateListing(*gin.Context)
+	GetAllListings(*gin.Context)
+	UpdateListing(*gin.Context)
+}
+
 type ListingHandler struct {
 	ListingServiceImpl *services.ListingServiceImpl
 }
