@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/menothe/shoptions/services"
 	"github.com/menothe/shoptions/structs"
 	"gorm.io/gorm"
@@ -57,6 +58,17 @@ func (lh *ListingHandler) GetAllListings(c *gin.Context) {
 
 func (lh *ListingHandler) UpdateListing(c *gin.Context) {
 	request := structs.UpdateListingRequestBody{}
+
+	id := c.Param("id")
+	listingID, err := uuid.Parse(id)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "listing does not exist",
+		})
+		return
+	}
+
 	if err := c.BindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "failed to read request body",
@@ -70,7 +82,7 @@ func (lh *ListingHandler) UpdateListing(c *gin.Context) {
 		})
 		return
 	}
-	err := lh.ListingServiceImpl.UpdateListing(&request)
+	err = lh.ListingServiceImpl.UpdateListing(&request, listingID)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

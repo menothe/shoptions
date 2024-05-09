@@ -103,14 +103,6 @@ func (uh *UserHandler) RequireAuth(c *gin.Context) {
 	c.Next()
 }
 
-func (uh *UserHandler) Validate(c *gin.Context) {
-	user, _ := c.Get("user")
-
-	c.JSON(http.StatusOK, gin.H{
-		"message": user,
-	})
-}
-
 // helper method for cookie creation
 func createCookie(c *gin.Context, userID uuid.UUID) {
 	// Generate a jwt token

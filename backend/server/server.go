@@ -32,13 +32,28 @@ func NewServer(router *gin.Engine) *Server {
 
 // utility & helper methods on the server class
 func (server *Server) SetupRoutes() {
-	server.Router.POST("/signup", server.UserHandler.SignUp)
-	server.Router.POST("/login", server.UserHandler.Login)
-	server.Router.POST("/logout", server.UserHandler.RequireAuth, server.UserHandler.Logout)
-	server.Router.GET("/validate", server.UserHandler.RequireAuth, server.UserHandler.Validate)
-	server.Router.POST("/listing", server.UserHandler.RequireAuth, server.ListingHandler.CreateListing)
-	server.Router.PUT("/listing", server.UserHandler.RequireAuth, server.ListingHandler.UpdateListing)
-	server.Router.GET("/listings", server.UserHandler.RequireAuth, server.ListingHandler.GetAllListings)
+	apiGroup := server.Router.Group("/api")
+
+	//users
+	userGroup := apiGroup.Group("/users")
+	userGroup.Use(func(c *gin.Context) {
+		// Skip authentication for login and signup
+		if c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" {
+			c.Next()
+			return
+		}
+		server.UserHandler.RequireAuth(c)
+	})
+	userGroup.POST("/signup", server.UserHandler.SignUp)
+	userGroup.POST("/login", server.UserHandler.Login)
+	userGroup.POST("/logout", server.UserHandler.Logout)
+
+	//listings
+	listingGroup := apiGroup.Group("/listings")
+	listingGroup.Use(server.UserHandler.RequireAuth)
+	listingGroup.POST("/create", server.ListingHandler.CreateListing)
+	listingGroup.PUT("/update/:id", server.ListingHandler.UpdateListing)
+	listingGroup.GET("/all", server.ListingHandler.GetAllListings)
 
 	server.Router.Run("localhost:8080")
 }

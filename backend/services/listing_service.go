@@ -13,7 +13,7 @@ import (
 type ListingService interface {
 	CreateListing(*structs.CreateListingRequestBody, any) (*models.Listing, error)
 	GetAllListings() ([]models.Listing, error)
-	UpdateListing(*structs.UpdateListingRequestBody) error
+	UpdateListing(*structs.UpdateListingRequestBody, uuid.UUID) error
 }
 
 type ListingServiceImpl struct {
@@ -61,9 +61,9 @@ func (ls *ListingServiceImpl) GetAllListings() ([]models.Listing, error) {
 	return listings, nil
 }
 
-func (ls *ListingServiceImpl) UpdateListing(updateRequest *structs.UpdateListingRequestBody) error {
+func (ls *ListingServiceImpl) UpdateListing(updateRequest *structs.UpdateListingRequestBody, listingID uuid.UUID) error {
 	var listing models.Listing
-	result := ls.DB.First(&listing, "listing_id = ?", updateRequest.ListingID)
+	result := ls.DB.First(&listing, "listing_id = ?", listingID)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return ErrRecordNotFound
