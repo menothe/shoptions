@@ -16,9 +16,10 @@ type UserLoginCredentials struct {
 }
 
 type CreateListingRequestBody struct {
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
-	Price       float64   `json:"starting_price"`
-	Category    string    `json:"category"`
-	EndTime     time.Time `json:"end_time"`
+	Title        string    `json:"title"`
+	Description  string    `json:"description"`
+	Price        float64   `json:"starting_price"`
+	Category     string    `json:"category"`
+	EndTime      time.Time `json:"end_time"`
+	ProductImage string    `json:"product_image,omitempty"`
 }

@@ -35,6 +35,7 @@ func (ls *ListingServiceImpl) CreateListing(listingRequest *structs.CreateListin
 		Description:   listingRequest.Description,
 		StartingPrice: listingRequest.Price,
 		EndTime:       listingRequest.EndTime,
+		ProductImage:  listingRequest.ProductImage,
 		CreatedAt:     time.Now(),
 		UpdatedAt:     time.Now(),
 		UserID:        seller.UserID,
