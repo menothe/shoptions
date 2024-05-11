@@ -64,14 +64,15 @@ func TestGetAllListings(t *testing.T) {
 		"user_id",
 		"created_at",
 		"updated_at",
+		"duration",
 	}).AddRow(
 		randomListing1.ListingID, randomListing1.Category, randomListing1.Title, randomListing1.Description,
 		randomListing1.ProductImage, randomListing1.StartingPrice, randomListing1.EndTime, randomListing1.Active,
-		randomListing1.UserID, randomListing1.CreatedAt, randomListing1.UpdatedAt,
+		randomListing1.UserID, randomListing1.CreatedAt, randomListing1.UpdatedAt, randomListing1.Duration,
 	).AddRow(
 		randomListing2.ListingID, randomListing2.Category, randomListing2.Title, randomListing2.Description,
 		randomListing2.ProductImage, randomListing2.StartingPrice, randomListing2.EndTime, randomListing2.Active,
-		randomListing2.UserID, randomListing2.CreatedAt, randomListing2.UpdatedAt,
+		randomListing2.UserID, randomListing2.CreatedAt, randomListing2.UpdatedAt, randomListing2.Duration,
 	)
 
 	mock.ExpectQuery("^SELECT (.+) FROM \"listings\"$").WillReturnRows(rows)
@@ -81,12 +82,70 @@ func TestGetAllListings(t *testing.T) {
 	if err != nil || len(listings) != 2 {
 		t.Errorf("error fetching all listings %v", err)
 	}
+
+	// we make sure that all expectations were met
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
+	}
+
 	listing1 := listings[0]
 	listing2 := listings[1]
 
 	listingAssertions(t, listing1, randomListing1)
 	listingAssertions(t, listing2, randomListing2)
 
+}
+
+func TestUpdateListing(t *testing.T) {
+	listingService, mock := setupDatabaseAndListingService(t)
+	randomUser := generateUser()
+	randomListing1 := generateListing(randomUser)
+	randomListing2 := generateListing(randomUser)
+
+	updateRequestBody := structs.UpdateListingRequestBody{
+		ListingID:     randomListing1.ListingID,
+		Title:         randomListing1.Title,
+		Description:   randomListing2.Description,
+		Category:      randomListing2.Category,
+		ProductImage:  randomListing1.ProductImage,
+		StartingPrice: randomListing2.StartingPrice,
+		EndTime:       randomListing1.EndTime,
+		Active:        randomListing1.Active,
+		Duration:      randomListing1.Duration,
+	}
+
+	row := sqlmock.NewRows([]string{
+		"listing_id",
+		"category",
+		"title",
+		"description",
+		"product_image",
+		"starting_price",
+		"end_time",
+		"active",
+		"user_id",
+		"created_at",
+		"updated_at",
+		"duration",
+	}).AddRow(
+		randomListing1.ListingID, randomListing1.Category, randomListing1.Title, randomListing1.Description,
+		randomListing1.ProductImage, randomListing1.StartingPrice, randomListing1.EndTime, randomListing1.Active,
+		randomListing1.UserID, randomListing1.CreatedAt, randomListing1.UpdatedAt, randomListing1.Duration,
+	)
+
+	mock.ExpectQuery("^SELECT (.+) FROM \"listings\" WHERE listing_id=? (.+)$").WillReturnRows(row)
+	mock.ExpectBegin()
+	mock.ExpectExec("^UPDATE \"listings\" SET (.+) WHERE (.+)$").WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectCommit()
+
+	err := listingService.UpdateListing(&updateRequestBody, updateRequestBody.ListingID)
+	if err != nil {
+		t.Errorf("error updating listing %v", err)
+	}
+	// we make sure that all expectations were met
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
+	}
 }
 
 // HELPER METHODS
@@ -143,6 +202,7 @@ func generateListing(user *models.User) models.Listing {
 		EndTime:       time.Now().Add(time.Hour * 24 * 5),
 		Active:        true,
 		UserID:        user.UserID,
+		Duration:      uint8(rand.Uint32()),
 		CreatedAt:     time.Now(),
 		UpdatedAt:     time.Now(),
 	}
