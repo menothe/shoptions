@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/menothe/shoptions/models"
 	"github.com/menothe/shoptions/services"
 	"github.com/menothe/shoptions/structs"
 	"gorm.io/gorm"
@@ -13,6 +14,7 @@ import (
 type ListingHandlerBehavior interface {
 	CreateListing(*gin.Context)
 	GetAllListings(*gin.Context)
+	GetUsersListings(*gin.Context)
 	UpdateListing(*gin.Context)
 	DeleteListing(*gin.Context)
 }
@@ -29,16 +31,31 @@ func NewListingHandler(db *gorm.DB) *ListingHandler {
 func (lh *ListingHandler) CreateListing(c *gin.Context) {
 	request := structs.CreateListingRequestBody{}
 	if err := c.BindJSON(&request); err != nil {
+		println("got here 4")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "failed to read request body",
 		})
 		return
 	}
 	// grab id of user who created the listing off the context
-	user := checkUserExists(c)
+	user, exists := c.Get("user")
+	if !exists {
+		println("got here 3")
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "user must be logged in to perform this action",
+		})
+		return
+	}
 
+	println("got here")
 	newListing, err := lh.ListingServiceImpl.CreateListing(&request, user)
-	checkForError(c, err)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to create listing",
+		})
+		return
+	}
+	println("got here 2")
 
 	c.IndentedJSON(http.StatusOK, newListing)
 }
@@ -59,7 +76,12 @@ func (lh *ListingHandler) UpdateListing(c *gin.Context) {
 
 	id := c.Param("id")
 	listingID, err := uuid.Parse(id)
-	checkForError(c, err)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to update listing",
+		})
+		return
+	}
 
 	if err := c.BindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -68,10 +90,21 @@ func (lh *ListingHandler) UpdateListing(c *gin.Context) {
 		return
 	}
 
-	checkUserExists(c)
+	_, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "user must be logged in to perform this action",
+		})
+		return
+	}
 
 	err = lh.ListingServiceImpl.UpdateListing(&request, listingID)
-	checkForError(c, err)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to update listing",
+		})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{})
 
@@ -80,33 +113,51 @@ func (lh *ListingHandler) UpdateListing(c *gin.Context) {
 func (lh *ListingHandler) DeleteListing(c *gin.Context) {
 	id := c.Param("id")
 	listingID, err := uuid.Parse(id)
-	checkForError(c, err)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to delete listing",
+		})
+		return
+	}
 
-	checkUserExists(c)
+	_, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "user must be logged in to perform this action",
+		})
+		return
+	}
 
 	err = lh.ListingServiceImpl.DeleteListing(listingID)
-	checkForError(c, err)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to delete listing",
+		})
+		return
+	}
 
 	c.JSON(http.StatusAccepted, gin.H{})
 
 }
 
-func checkUserExists(c *gin.Context) any {
+func (lh *ListingHandler) GetUsersListings(c *gin.Context) {
 	user, exists := c.Get("user")
 	if !exists {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "user must be logged in to perform this action",
 		})
-		return nil
+		return
 	}
-	return user
-}
 
-func checkForError(c *gin.Context, err error) {
+	userID := user.(models.User).UserID
+
+	usersListings, err := lh.ListingServiceImpl.GetUsersListings(userID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "failed to complete request",
+			"error": "unable to fetch user's listings",
 		})
 		return
 	}
+
+	c.IndentedJSON(http.StatusAccepted, usersListings)
 }

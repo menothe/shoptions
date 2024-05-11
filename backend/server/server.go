@@ -54,6 +54,7 @@ func (server *Server) SetupRoutes() {
 	listingGroup.POST("/create", server.ListingHandler.CreateListing)
 	listingGroup.PUT("/update/:id", server.ListingHandler.UpdateListing)
 	listingGroup.GET("/all", server.ListingHandler.GetAllListings)
+	listingGroup.GET("/by_user", server.ListingHandler.GetUsersListings)
 
 	server.Router.Run("localhost:8080")
 }

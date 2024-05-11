@@ -13,6 +13,7 @@ import (
 type ListingService interface {
 	CreateListing(*structs.CreateListingRequestBody, any) (*models.Listing, error)
 	GetAllListings() ([]models.Listing, error)
+	GetUsersListings(uuid.UUID)
 	UpdateListing(*structs.UpdateListingRequestBody, uuid.UUID) error
 	DeleteListing(uuid.UUID) error
 }
@@ -107,12 +108,25 @@ func (ls *ListingServiceImpl) DeleteListing(listingID uuid.UUID) error {
 	return nil
 }
 
+func (ls *ListingServiceImpl) GetUsersListings(userID uuid.UUID) ([]models.Listing, error) {
+	var listings []models.Listing
+
+	result := ls.DB.Where("user_id = ?", userID).Find(&listings)
+
+	if result.Error != nil {
+		return []models.Listing{}, ErrFailedToFetchUsersListings
+	}
+
+	return listings, nil
+}
+
 // ERRORS
 
 var (
-	ErrFailedToCreateListing    = errors.New("unable to create new listing")
-	ErrFailedToFetchAllListings = errors.New("unable to return all listings")
-	ErrRecordNotFound           = errors.New("record does not exist")
-	ErrFailedUpdateListing      = errors.New("failure updating listing")
-	ErrFailedDeleteListing      = errors.New("failed to delete listing")
+	ErrFailedToCreateListing      = errors.New("unable to create new listing")
+	ErrFailedToFetchAllListings   = errors.New("unable to return all listings")
+	ErrRecordNotFound             = errors.New("record does not exist")
+	ErrFailedUpdateListing        = errors.New("failure updating listing")
+	ErrFailedDeleteListing        = errors.New("failed to delete listing")
+	ErrFailedToFetchUsersListings = errors.New("unable to fetch users listings")
 )

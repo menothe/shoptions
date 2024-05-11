@@ -39,7 +39,7 @@ const Dashboard = () => {
             starting_price: parseFloat(price.slice(1)), //remove the "$" from the field
             category,
             end_time: listingEndTime.toISOString(),
-            duration,
+            duration: parseInt(duration),
         };
         axios.post(SERVER_HOST + CREATE_LISTING, newListingRequestBody, {
             withCredentials: true, // include credentials in the request
