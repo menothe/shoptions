@@ -12,19 +12,24 @@ const Dashboard = () => {
     const [listings, setListings] = useContext(ListingContext);
 
     useEffect(() => {
-        axios.get(getAllListingsEndpoint, {
-            withCredentials: true,
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(response => {
-                setListings(response.data);
+        if (!window.sessionStorage.length) {
+            axios.get(getAllListingsEndpoint, {
+                withCredentials: true,
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             })
-            .catch(e => {
-                console.error("err: ", e);
-            })
+                .then(response => {
+                    setListings(response.data);
+                    window.sessionStorage.setItem("listings", JSON.stringify(response.data));
+                })
+                .catch(e => {
+                    console.error("err: ", e);
+                })
+        } else {
+            setListings(JSON.parse(window.sessionStorage.getItem("listings")));
+        }
     }, []);
 
     const handleCreateListing = event => {
