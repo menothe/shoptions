@@ -35,6 +35,7 @@ func (ls *ListingServiceImpl) CreateListing(listingRequest *structs.CreateListin
 		Title:         listingRequest.Title,
 		Description:   listingRequest.Description,
 		StartingPrice: listingRequest.Price,
+		Duration:      listingRequest.Duration,
 		EndTime:       listingRequest.EndTime,
 		ProductImage:  listingRequest.ProductImage,
 		CreatedAt:     time.Now(),
@@ -76,6 +77,7 @@ func (ls *ListingServiceImpl) UpdateListing(updateRequest *structs.UpdateListing
 	listing.StartingPrice = updateRequest.StartingPrice
 	listing.EndTime = updateRequest.EndTime
 	listing.Active = updateRequest.Active
+	listing.Duration = updateRequest.Duration
 	listing.UpdatedAt = time.Now()
 
 	result = ls.DB.Save(&listing)

@@ -26,6 +26,7 @@ type CreateListingRequestBody struct {
 	Category     string    `json:"category"`
 	EndTime      time.Time `json:"end_time"`
 	ProductImage string    `json:"product_image,omitempty"`
+	Duration     uint8     `json:"duration"`
 }
 
 type UpdateListingRequestBody struct {
@@ -37,4 +38,5 @@ type UpdateListingRequestBody struct {
 	StartingPrice float64   `json:"starting_price"`
 	EndTime       time.Time `json:"end_time"`
 	Active        bool      `json:"active"`
+	Duration      uint8     `json:"duration"`
 }

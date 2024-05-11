@@ -9,8 +9,9 @@ export default function EditListing() {
     const { listingID } = useParams();
     const [listings, setListings] = useContext(ListingContext);
     const listing = listings.filter(listing => listing.ListingID === listingID)[0];
-    console.log("listing: ", listing);
     const [editedListing, setEditedListing] = useState(listing);
+    console.log("edited listing: ", editedListing);
+    // debugger;
 
     const handleListingFieldChange = (e, field) => {
         e.preventDefault();
@@ -21,13 +22,13 @@ export default function EditListing() {
         <>
             <NavBar loggedIn={true} />
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <TextField id="standard-basic" label="Title" variant="standard" sx={{ marginBottom: "20px" }} value={editedListing.Title} onChange={(e) => handleListingFieldChange(e, "Title")} />
+                <TextField id="standard-basic" label="Title" variant="standard" sx={{ marginBottom: "20px" }} value={editedListing?.Title} onChange={(e) => handleListingFieldChange(e, "Title")} />
                 <FormControl sx={{ width: "10%", margin: "20px" }}>
                     <InputLabel id="demo-simple-select-label">Category</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={editedListing.Category}
+                        value={editedListing?.Category}
                         label="Category"
                         onChange={(e) => handleListingFieldChange(e, "Category")}
                     >
@@ -40,15 +41,14 @@ export default function EditListing() {
                 <TextField
                     id="outlined-multiline-static"
                     label="Description"
-                    multiline
                     rows={4}
-                    value={editedListing.Description}
+                    value={editedListing?.Description}
                     onChange={(e) => handleListingFieldChange(e, "Description")}
                 />
                 <div className="field price" style={{ marginTop: 10, display: "flex" }}>
                     <TextField
                         label="Starting Price"
-                        value={listing.StartingPrice}
+                        value={listing?.StartingPrice}
                         name="price"
                         id="formatted-numberformat-input"
                         InputProps={{
@@ -63,7 +63,7 @@ export default function EditListing() {
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={listing.Duration}
+                        value={listing?.Duration}
                         label="Duration"
                         name="duration"
                     >

@@ -31,13 +31,15 @@ const Dashboard = () => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const formJson = Object.fromEntries(formData.entries());
-        const listingEndTime = getCurrentTimePlusNumberOfDays(parseInt(formJson.duration))
+        const { duration, title, description, price, category } = formJson;
+        const listingEndTime = getCurrentTimePlusNumberOfDays(parseInt(duration));
         const newListingRequestBody = {
-            title: formJson.title,
-            description: formJson.description,
-            starting_price: parseFloat(formJson.price.slice(1)), //remove the "$" from the field
-            category: formJson.category,
+            title,
+            description,
+            starting_price: parseFloat(price.slice(1)), //remove the "$" from the field
+            category,
             end_time: listingEndTime.toISOString(),
+            duration,
         };
         axios.post(SERVER_HOST + CREATE_LISTING, newListingRequestBody, {
             withCredentials: true, // include credentials in the request

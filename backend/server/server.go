@@ -38,7 +38,7 @@ func (server *Server) SetupRoutes() {
 	userGroup := apiGroup.Group("/users")
 	userGroup.Use(func(c *gin.Context) {
 		// Skip authentication for login and signup
-		if c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" {
+		if c.Request.URL.Path == "/api/users/login" || c.Request.URL.Path == "api/users/signup" {
 			c.Next()
 			return
 		}

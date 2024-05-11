@@ -22,6 +22,7 @@ type Listing struct {
 	ProductImage  string
 	StartingPrice float64
 	EndTime       time.Time
+	Duration      uint8
 	Active        bool `gorm:"default:true"`
 	UserID        uuid.UUID
 	CreatedAt     time.Time
