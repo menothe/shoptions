@@ -14,6 +14,7 @@ type ListingHandlerBehavior interface {
 	CreateListing(*gin.Context)
 	GetAllListings(*gin.Context)
 	UpdateListing(*gin.Context)
+	DeleteListing(*gin.Context)
 }
 
 type ListingHandler struct {
@@ -34,20 +35,11 @@ func (lh *ListingHandler) CreateListing(c *gin.Context) {
 		return
 	}
 	// grab id of user who created the listing off the context
-	user, exists := c.Get("user")
-	if !exists {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "user must be logged in to create listing",
-		})
-		return
-	}
+	user := checkUserExists(c)
+
 	newListing, err := lh.ListingServiceImpl.CreateListing(&request, user)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "failed to create listing",
-		})
-		return
-	}
+	checkForError(c, err)
+
 	c.IndentedJSON(http.StatusOK, newListing)
 }
 
@@ -67,13 +59,7 @@ func (lh *ListingHandler) UpdateListing(c *gin.Context) {
 
 	id := c.Param("id")
 	listingID, err := uuid.Parse(id)
-
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"error": "listing does not exist",
-		})
-		return
-	}
+	checkForError(c, err)
 
 	if err := c.BindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -81,21 +67,46 @@ func (lh *ListingHandler) UpdateListing(c *gin.Context) {
 		})
 		return
 	}
-	_, exists := c.Get("user")
-	if !exists {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "user must be logged in to update listings",
-		})
-		return
-	}
-	err = lh.ListingServiceImpl.UpdateListing(&request, listingID)
 
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "failed to update listing",
-		})
-		return
-	}
+	checkUserExists(c)
+
+	err = lh.ListingServiceImpl.UpdateListing(&request, listingID)
+	checkForError(c, err)
+
 	c.JSON(http.StatusOK, gin.H{})
 
+}
+
+func (lh *ListingHandler) DeleteListing(c *gin.Context) {
+	id := c.Param("id")
+	listingID, err := uuid.Parse(id)
+	checkForError(c, err)
+
+	checkUserExists(c)
+
+	err = lh.ListingServiceImpl.DeleteListing(listingID)
+	checkForError(c, err)
+
+	c.JSON(http.StatusAccepted, gin.H{})
+
+}
+
+func checkUserExists(c *gin.Context) any {
+	user, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "user must be logged in to perform this action",
+		})
+		return nil
+	}
+	return user
+}
+
+func checkForError(c *gin.Context, err error) {
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to complete request",
+		})
+		return
+	}
 }

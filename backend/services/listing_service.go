@@ -14,6 +14,7 @@ type ListingService interface {
 	CreateListing(*structs.CreateListingRequestBody, any) (*models.Listing, error)
 	GetAllListings() ([]models.Listing, error)
 	UpdateListing(*structs.UpdateListingRequestBody, uuid.UUID) error
+	DeleteListing(uuid.UUID) error
 }
 
 type ListingServiceImpl struct {
@@ -89,6 +90,23 @@ func (ls *ListingServiceImpl) UpdateListing(updateRequest *structs.UpdateListing
 	return nil
 }
 
+func (ls *ListingServiceImpl) DeleteListing(listingID uuid.UUID) error {
+	var listing models.Listing
+	result := ls.DB.First(&listing, "listing_id = ?", listingID)
+
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return ErrRecordNotFound
+	}
+
+	result = ls.DB.Delete(&listing)
+
+	if result.Error != nil {
+		return ErrFailedUpdateListing
+	}
+
+	return nil
+}
+
 // ERRORS
 
 var (
@@ -96,4 +114,5 @@ var (
 	ErrFailedToFetchAllListings = errors.New("unable to return all listings")
 	ErrRecordNotFound           = errors.New("record does not exist")
 	ErrFailedUpdateListing      = errors.New("failure updating listing")
+	ErrFailedDeleteListing      = errors.New("failed to delete listing")
 )
