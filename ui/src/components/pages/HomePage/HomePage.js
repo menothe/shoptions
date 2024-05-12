@@ -38,7 +38,7 @@ export default function HomePage({ loggedIn }) {
                                 <Button color="inherit">Login</Button>
                             </Link>
                         </div>}
-                        {loggedIn && <Link href="/logout" color="inherit">
+                        {loggedIn && <Link href="/" color="inherit">
                             <Button onClick={() => handleLogout(navigate)} color="inherit">Logout</Button>
                         </Link>}
                     </Toolbar>

@@ -123,5 +123,5 @@ func createCookie(c *gin.Context, userID uuid.UUID) {
 
 	//set in local storage or cookie, we set in cookie
 	c.SetSameSite(http.SameSiteNoneMode)
-	c.SetCookie("Authorization", tokenString, 3600*24*30, "/", "localhost", true, true)
+	c.SetCookie("Authorization", tokenString, 3600*24*30, "/", "localhost", true, false)
 }

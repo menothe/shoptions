@@ -32,7 +32,7 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function SignInPage() {
+export default function LoginPage() {
     const navigate = useNavigate();
 
     return (
@@ -51,7 +51,7 @@ export default function SignInPage() {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign in
+                        Log in
                     </Typography>
                     <Box component="form" onSubmit={(e) => handleUserSignIn(e, navigate)} noValidate sx={{ mt: 1 }}>
                         <TextField
@@ -84,7 +84,7 @@ export default function SignInPage() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign In
+                            Log In
                         </Button>
                         <Grid container>
                             <Grid item xs>

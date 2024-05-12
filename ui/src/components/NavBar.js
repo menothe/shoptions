@@ -10,7 +10,7 @@ import Link from '@mui/material/Link';
 import { useNavigate } from "react-router-dom";
 import { handleLogout } from '../helpers/utils';
 
-export default function ButtonAppBar({ loggedIn }) {
+export default function NavBar({ loggedIn }) {
     const navigate = useNavigate();
 
     return (
