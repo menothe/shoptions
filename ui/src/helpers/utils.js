@@ -60,7 +60,7 @@ export const handleSignupUser = (event, navigateFn) => {
     })
         .then(res => {
             if (res.status == 200) {
-                navigateFn("/dashboard");
+                navigateFn("/sellers-dashboard");
             }
         });
 };
@@ -81,7 +81,7 @@ export const handleUserSignIn = (event, navigateFn) => {
     })
         .then(response => {
             if (response.status === 200) {
-                navigateFn("/dashboard");
+                navigateFn("/");
             }
         })
         .catch(error => {

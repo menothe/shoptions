@@ -5,7 +5,7 @@ import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } 
 import { NumericFormat } from 'react-number-format';
 import { ListingContext } from '../../../App';
 
-export default function EditListing() {
+export default function EditListingPage() {
     const { listingID } = useParams();
     const [listings, setListings] = useContext(ListingContext);
     const listing = listings.filter(listing => listing.ListingID === listingID)[0];

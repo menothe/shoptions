@@ -1,13 +1,13 @@
-import NavBar from './NavBar';
-import FormDialog from './FormDialog';
+import NavBar from '../../NavBar';
+import FormDialog from '../../FormDialog';
 import { useContext, useEffect, useState } from 'react';
-import { getCurrentTimePlusNumberOfDays } from '../helpers/utils';
+import { getCurrentTimePlusNumberOfDays } from '../../../helpers/utils';
 import axios from 'axios';
-import ActionAreaCard from './ListingCard';
-import { SERVER_HOST, GET_ALL_LISTINGS, CREATE_LISTING } from '../constants';
-import { ListingContext } from '../App';
+import ActionAreaCard from '../../ListingCard';
+import { SERVER_HOST, GET_ALL_LISTINGS, CREATE_LISTING } from '../../../constants';
+import { ListingContext } from '../../../App';
 
-const Dashboard = () => {
+const SellersDashboardPage = () => {
     const getAllListingsEndpoint = SERVER_HOST + GET_ALL_LISTINGS;
     const [listings, setListings] = useContext(ListingContext);
 
@@ -81,4 +81,4 @@ const Dashboard = () => {
     )
 }
 
-export default Dashboard;
+export default SellersDashboardPage;
