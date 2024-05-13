@@ -14,6 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 import { handleUserSignIn } from '../../../helpers/utils';
+import { UserContext } from '../../../App';
 
 function Copyright(props) {
     return (
@@ -34,6 +35,7 @@ const defaultTheme = createTheme();
 
 export default function LoginPage() {
     const navigate = useNavigate();
+    const [loggedIn, setLoggedIn] = React.useContext(UserContext);
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -53,7 +55,7 @@ export default function LoginPage() {
                     <Typography component="h1" variant="h5">
                         Log in
                     </Typography>
-                    <Box component="form" onSubmit={(e) => handleUserSignIn(e, navigate)} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={(e) => handleUserSignIn(e, navigate, setLoggedIn)} noValidate sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"
                             required

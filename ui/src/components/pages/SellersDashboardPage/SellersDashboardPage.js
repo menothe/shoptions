@@ -4,16 +4,16 @@ import { useContext, useEffect, useState } from 'react';
 import { getCurrentTimePlusNumberOfDays } from '../../../helpers/utils';
 import axios from 'axios';
 import ActionAreaCard from '../../ListingCard';
-import { SERVER_HOST, GET_ALL_LISTINGS, CREATE_LISTING } from '../../../constants';
+import { SERVER_HOST, GET_ALL_LISTINGS, CREATE_LISTING, GET_USER_LISTINGS } from '../../../constants';
 import { ListingContext } from '../../../App';
 
 const SellersDashboardPage = () => {
-    const getAllListingsEndpoint = SERVER_HOST + GET_ALL_LISTINGS;
+    const getUserListingsEndpoint = SERVER_HOST + GET_USER_LISTINGS;
     const [listings, setListings] = useContext(ListingContext);
 
     useEffect(() => {
         if (!window.sessionStorage.length) {
-            axios.get(getAllListingsEndpoint, {
+            axios.get(getUserListingsEndpoint, {
                 withCredentials: true,
                 mode: 'cors',
                 headers: {

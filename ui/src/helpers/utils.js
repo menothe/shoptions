@@ -33,6 +33,7 @@ export const handleLogout = logoutFn => {
     })
         .then(res => {
             if (res.status == 200) {
+                window.sessionStorage.clear();
                 logoutFn("/");
             }
         });
@@ -65,7 +66,7 @@ export const handleSignupUser = (event, navigateFn) => {
         });
 };
 
-export const handleUserSignIn = (event, navigateFn) => {
+export const handleUserSignIn = (event, navigateFn, setLoggedIn) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const loginRequestBody = {
@@ -81,6 +82,7 @@ export const handleUserSignIn = (event, navigateFn) => {
     })
         .then(response => {
             if (response.status === 200) {
+                setLoggedIn(true);
                 navigateFn("/");
             }
         })

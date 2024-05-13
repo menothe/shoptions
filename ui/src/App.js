@@ -9,31 +9,28 @@ import HomePage from './components/pages/HomePage/HomePage';
 import { CookiesProvider, useCookies } from 'react-cookie'
 
 export const ListingContext = createContext();
+export const UserContext = createContext();
 
 
 function App() {
   const [listings, setListings] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
 
-  useEffect(() => {
-    if (document.cookie.length) {
-      setLoggedIn(true);
-    }
-  }, [])
-
 
   return (
-    <ListingContext.Provider value={[listings, setListings]}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<HomePage loggedIn={loggedIn} />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/sellers-dashboard" element={<SellersDashboardPage />} />
-          <Route path="/edit-listing/:listingID" element={<EditListingPage />} />
-        </Routes>
-      </Router>
-    </ListingContext.Provider>
+    <UserContext.Provider value={[loggedIn, setLoggedIn]}>
+      <ListingContext.Provider value={[listings, setListings]}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/sellers-dashboard" element={<SellersDashboardPage />} />
+            <Route path="/edit-listing/:listingID" element={<EditListingPage />} />
+          </Routes>
+        </Router>
+      </ListingContext.Provider>
+    </UserContext.Provider>
   );
 }
 

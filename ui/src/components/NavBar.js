@@ -9,9 +9,50 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Link from '@mui/material/Link';
 import { useNavigate } from "react-router-dom";
 import { handleLogout } from '../helpers/utils';
+import { Menu, MenuItem } from '@mui/material';
+import { UserContext } from '../App';
 
-export default function NavBar({ loggedIn }) {
+export default function NavBar() {
     const navigate = useNavigate();
+    const [loggedIn, setLoggedIn] = React.useContext(UserContext);
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleMenuItemRouting = route => {
+        navigate(route);
+        setAnchorEl(null);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    }
+
+
+    //     <Button
+    //     id="basic-button"
+    //     aria-controls={open ? 'basic-menu' : undefined}
+    //     aria-haspopup="true"
+    //     aria-expanded={open ? 'true' : undefined}
+    //     onClick={handleClick}
+    //   >
+    //     Dashboard
+    //   </Button>
+    //   <Menu
+    //     id="basic-menu"
+    //     anchorEl={anchorEl}
+    //     open={open}
+    //     onClose={handleClose}
+    //     MenuListProps={{
+    //       'aria-labelledby': 'basic-button',
+    //     }}
+    //   >
+    //     <MenuItem onClick={handleClose}>Profile</MenuItem>
+    //     <MenuItem onClick={handleClose}>My account</MenuItem>
+    //     <MenuItem onClick={handleClose}>Logout</MenuItem>
+    //   </Menu>
 
     return (
         <div>
@@ -25,7 +66,18 @@ export default function NavBar({ loggedIn }) {
                             aria-label="menu"
                             sx={{ mr: 2 }}
                         >
-                            <MenuIcon />
+                            <MenuIcon
+                                id="hamburger"
+                                onClick={handleClick}
+                            />
+                            <Menu
+                                id="hamburger"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                            >
+                                {loggedIn ? <MenuItem onClick={() => handleMenuItemRouting("/sellers-dashboard")}>Sellers Dashboard</MenuItem> : null}
+                            </Menu>
                         </IconButton>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             Shoptions
@@ -38,17 +90,12 @@ export default function NavBar({ loggedIn }) {
                                 <Button color="inherit">Login</Button>
                             </Link>
                         </div>}
-                        {loggedIn && <Link href="/logout" color="inherit">
+                        {loggedIn && <Link href="/" color="inherit">
                             <Button onClick={() => handleLogout(navigate)} color="inherit">Logout</Button>
                         </Link>}
                     </Toolbar>
                 </AppBar>
             </Box>
-            {!loggedIn ? (
-                <div style={{ display: "flex", justifyContent: "center", marginTop: "10%" }}>
-                    <h1 style={{ fontSize: 100 }}>Welcome</h1>
-                </div>
-            ) : null}
         </div>
     );
 }
