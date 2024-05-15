@@ -16,6 +16,12 @@ function App() {
   const [listings, setListings] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
 
+  useEffect(() => {
+    if (document.cookie.length) {
+      setLoggedIn(true);
+    }
+  }, [])
+
 
   return (
     <UserContext.Provider value={[loggedIn, setLoggedIn]}>

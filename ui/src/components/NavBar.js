@@ -79,9 +79,11 @@ export default function NavBar() {
                                 {loggedIn ? <MenuItem onClick={() => handleMenuItemRouting("/sellers-dashboard")}>Sellers Dashboard</MenuItem> : null}
                             </Menu>
                         </IconButton>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            Shoptions
-                        </Typography>
+                        <div onClick={() => navigate("/")} style={{ width: "90vw", cursor: "pointer" }}>
+                            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                                Shoptions
+                            </Typography>
+                        </div>
                         {!loggedIn && <div>
                             <Link href="/signup" color="inherit">
                                 <Button color="inherit">Signup</Button>
