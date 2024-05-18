@@ -50,7 +50,14 @@ func (server *Server) SetupRoutes() {
 
 	//listings
 	listingGroup := apiGroup.Group("/listings")
-	listingGroup.Use(server.UserHandler.RequireAuth)
+	listingGroup.Use(func(c *gin.Context) {
+		//Skip authentication for getting all listings
+		if c.Request.URL.Path == "/api/listings/all" {
+			c.Next()
+			return
+		}
+		server.UserHandler.RequireAuth(c)
+	})
 	listingGroup.POST("/create", server.ListingHandler.CreateListing)
 	listingGroup.PUT("/update/:id", server.ListingHandler.UpdateListing)
 	listingGroup.GET("/all", server.ListingHandler.GetAllListings)
