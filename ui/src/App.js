@@ -15,7 +15,6 @@ function App() {
   const [listings, setListings] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
 
-
   useEffect(() => {
     if (document.cookie.length) {
       setLoggedIn(true);
@@ -26,6 +25,7 @@ function App() {
     <UserContext.Provider value={[loggedIn, setLoggedIn]}>
       <ListingContext.Provider value={[listings, setListings]}>
         <Router>
+          <NavBar loggedIn={loggedIn} />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/signup" element={<SignUpPage />} />

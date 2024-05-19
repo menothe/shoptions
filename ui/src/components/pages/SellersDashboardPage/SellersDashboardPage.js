@@ -1,4 +1,3 @@
-import NavBar from "../../NavBar";
 import FormDialog from "../../FormDialog";
 import { useContext, useEffect, useState } from "react";
 import { getCurrentTimePlusNumberOfDays } from "../../../helpers/utils";
@@ -77,7 +76,6 @@ const SellersDashboardPage = () => {
   };
   return (
     <div>
-      <NavBar loggedIn={true} />
       <div style={{ ...styles }}>
         <h1>Listings</h1>
         <FormDialog handleSubmitListing={handleCreateListing} />

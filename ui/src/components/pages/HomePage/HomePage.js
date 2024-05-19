@@ -1,6 +1,5 @@
 import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../../NavBar";
 import { ListingContext, UserContext } from "../../../App";
 import FuzzySearch from "../../FuzzySearch";
 import { GET_ALL_LISTINGS, SERVER_HOST } from "../../../constants";
@@ -9,8 +8,8 @@ import ListingCard from "../../ListingCard";
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const [loggedIn, setLoggedIn] = useContext(UserContext);
   const [listings, setListings] = useContext(ListingContext);
+  const [loggedIn, setLoggedIn] = useContext(UserContext);
   const getUserListingsEndpoint = SERVER_HOST + GET_ALL_LISTINGS;
 
   const products = [
@@ -62,7 +61,6 @@ export default function HomePage() {
 
   return (
     <div>
-      <NavBar loggedIn={loggedIn} />
       <div style={{ display: "flex", width: "100%", justifyContent: "center" }}>
         <FuzzySearch data={products[0]} />
       </div>
@@ -71,7 +69,7 @@ export default function HomePage() {
           style={{
             display: "flex",
             justifyContent: "center",
-            marginTop: "10%",
+            marginTop: "20px",
           }}
         >
           <div
