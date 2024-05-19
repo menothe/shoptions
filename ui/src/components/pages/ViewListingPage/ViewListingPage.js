@@ -1,8 +1,10 @@
-import { useParams } from "react-router-dom";
-import { ListingContext } from "../../../App";
+import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect } from "react";
+import { ListingContext, UserContext } from "../../../contexts";
 
 export default function ViewListingPage() {
+  const [loggedIn, setLoggedIn] = useContext(UserContext);
+  const navigate = useNavigate();
   useEffect(() => {
     if (window.sessionStorage.length) {
       setListings(JSON.parse(window.sessionStorage.getItem("listings")));
@@ -15,10 +17,19 @@ export default function ViewListingPage() {
   let listing = listings.filter((item) => item.ListingID === listingID)[0];
   const { Title, Description, Category, StartingPrice, Duration } =
     listing ?? {};
-  console.log("listing: ", listing);
 
   const handleSubmitBid = (e) => {
     e.preventDefault();
+    if (!loggedIn) {
+      navigate("/login");
+    } else {
+      //TODO: CALL BACKEND 'BID' ENDPOINT
+      //POST CALL:
+      /**
+       * USERID, LISTINGID, BIDAMOUNT
+       *
+       */
+    }
   };
 
   return (

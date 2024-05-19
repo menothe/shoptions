@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import Placeholder from "../images/placeholder-image.jpg";
 import { Link } from "react-router-dom";
-import { UserContext } from "../App";
+import { UserContext } from "../contexts";
 
 export default function ListingCard({ listing }) {
   const { Category, Description, StartingPrice, Title, ListingID } = listing;

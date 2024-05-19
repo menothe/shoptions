@@ -1,10 +1,10 @@
 import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { ListingContext, UserContext } from "../../../App";
 import FuzzySearch from "../../FuzzySearch";
 import { GET_ALL_LISTINGS, SERVER_HOST } from "../../../constants";
 import axios from "axios";
 import ListingCard from "../../ListingCard";
+import { ListingContext, UserContext } from "../../../contexts";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -64,7 +64,8 @@ export default function HomePage() {
       <div style={{ display: "flex", width: "100%", justifyContent: "center" }}>
         <FuzzySearch data={products[0]} />
       </div>
-      {!loggedIn && !document.cookie.length ? (
+      {/* !loggedIn &&  */}
+      {window.sessionStorage.getItem("listings") ? (
         <div
           style={{
             display: "flex",

@@ -9,7 +9,7 @@ import {
   CREATE_LISTING,
   GET_USER_LISTINGS,
 } from "../../../constants";
-import { ListingContext } from "../../../App";
+import { ListingContext } from "../../../contexts";
 
 const SellersDashboardPage = () => {
   const getUserListingsEndpoint = SERVER_HOST + GET_USER_LISTINGS;

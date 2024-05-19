@@ -10,7 +10,7 @@ import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
 import { handleLogout } from "../helpers/utils";
 import { Menu, MenuItem } from "@mui/material";
-import { UserContext } from "../App";
+import { UserContext } from "../contexts";
 
 export default function NavBar() {
   const navigate = useNavigate();

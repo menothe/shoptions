@@ -9,7 +9,7 @@ import {
   TextField,
 } from "@mui/material";
 import { NumericFormat } from "react-number-format";
-import { ListingContext } from "../../../App";
+import { ListingContext } from "../../../contexts";
 
 export default function EditListingPage() {
   const { listingID } = useParams();
