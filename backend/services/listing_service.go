@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -16,6 +17,7 @@ type ListingService interface {
 	GetUsersListings(uuid.UUID)
 	UpdateListing(*structs.UpdateListingRequestBody, uuid.UUID) error
 	DeleteListing(uuid.UUID) error
+	SearchListingsByQuery(string) (*models.Listing, error)
 }
 
 type ListingServiceImpl struct {
@@ -119,6 +121,22 @@ func (ls *ListingServiceImpl) GetUsersListings(userID uuid.UUID) ([]models.Listi
 
 	return listings, nil
 }
+
+func (ls *ListingServiceImpl) SearchListingsByQuery(query string) ([]models.Listing, error) {
+	var listings []models.Listing
+
+	lowercased := "%" + strings.ToLower(query) + "%"
+
+	result := ls.DB.Raw("SELECT * FROM listings WHERE LOWER(title) LIKE ? OR LOWER(description) LIKE ?", lowercased, lowercased).Scan(&listings)
+
+	if result.Error != nil {
+		return []models.Listing{}, ErrFailedToFetchUsersListings
+	}
+
+	return listings, nil
+}
+
+
 
 // ERRORS
 

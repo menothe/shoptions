@@ -4,7 +4,7 @@ import SignUpPage from "./components/pages/SignUpPage/SignUpPage";
 import LoginPage from "./components/pages/LoginPage/LoginPage";
 import EditListingPage from "./components/pages/EditListingPage/EditListingPage";
 import SellersDashboardPage from "./components/pages/SellersDashboardPage/SellersDashboardPage";
-import { useState, createContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import HomePage from "./components/pages/HomePage/HomePage";
 import ViewListingPage from "./components/pages/ViewListingPage/ViewListingPage";
 import { RouteHistoryProvider, UserContext, ListingContext } from "./contexts";

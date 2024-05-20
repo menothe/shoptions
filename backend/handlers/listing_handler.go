@@ -17,6 +17,7 @@ type ListingHandlerBehavior interface {
 	GetUsersListings(*gin.Context)
 	UpdateListing(*gin.Context)
 	DeleteListing(*gin.Context)
+	SearchByQuery(* gin.Context)
 }
 
 type ListingHandler struct {
@@ -156,4 +157,25 @@ func (lh *ListingHandler) GetUsersListings(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusAccepted, usersListings)
+}
+
+func (lh *ListingHandler) SearchByQuery(c *gin.Context) {
+	request := struct{
+		Query string `json:"query"`
+	}{}
+	if err := c.BindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "bad search request",
+		})
+		return
+	}
+	listings, err := lh.ListingServiceImpl.SearchListingsByQuery(request.Query)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "failed to search for listings",
+		})
+		return
+	}
+	c.IndentedJSON(http.StatusAccepted, listings)
 }
