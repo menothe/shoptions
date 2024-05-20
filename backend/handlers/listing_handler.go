@@ -31,7 +31,6 @@ func NewListingHandler(db *gorm.DB) *ListingHandler {
 func (lh *ListingHandler) CreateListing(c *gin.Context) {
 	request := structs.CreateListingRequestBody{}
 	if err := c.BindJSON(&request); err != nil {
-		println("got here 4")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "failed to read request body",
 		})
@@ -40,14 +39,12 @@ func (lh *ListingHandler) CreateListing(c *gin.Context) {
 	// grab id of user who created the listing off the context
 	user, exists := c.Get("user")
 	if !exists {
-		println("got here 3")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "user must be logged in to perform this action",
 		})
 		return
 	}
 
-	println("got here")
 	newListing, err := lh.ListingServiceImpl.CreateListing(&request, user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -55,7 +52,6 @@ func (lh *ListingHandler) CreateListing(c *gin.Context) {
 		})
 		return
 	}
-	println("got here 2")
 
 	c.IndentedJSON(http.StatusOK, newListing)
 }
