@@ -14,6 +14,7 @@ import (
 type Server struct {
 	UserHandler    *handlers.UserHandler
 	ListingHandler *handlers.ListingHandler
+	BidHandler *handlers.BidHandler
 	Router         *gin.Engine
 }
 
@@ -27,7 +28,8 @@ func NewServer(router *gin.Engine) *Server {
 	}
 	userHandler := handlers.NewUserHandler(db)
 	listingHandler := handlers.NewListingHandler(db)
-	return &Server{userHandler, listingHandler, router}
+	bidHandler := handlers.NewBidHandler(db)
+	return &Server{userHandler, listingHandler, bidHandler, router}
 }
 
 // utility & helper methods on the server class
@@ -63,6 +65,11 @@ func (server *Server) SetupRoutes() {
 	listingGroup.GET("/all", server.ListingHandler.GetAllListings)
 	listingGroup.GET("/by_user", server.ListingHandler.GetUsersListings)
 	listingGroup.POST("by_query", server.ListingHandler.SearchByQuery)
+
+	//bids
+	bidGroup := apiGroup.Group("/bids")
+	bidGroup.Use(server.UserHandler.RequireAuth)
+	bidGroup.POST("/create", server.BidHandler.CreateBid)
 
 	server.Router.Run("localhost:8080")
 }
