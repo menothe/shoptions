@@ -4,7 +4,7 @@ import ListingCard from "../../ListingCard";
 import { List } from "@mui/material";
 
 export default function SearchResultsPage() {
-  const [searchResults, setSearchResults] = useContext(SearchResultsContext);
+  const searchResults = useContext(SearchResultsContext)[0];
   return (
     <List>
       {searchResults.map((result) => {
