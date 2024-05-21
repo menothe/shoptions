@@ -64,7 +64,6 @@ export default function HomePage() {
       <div style={{ display: "flex", width: "100%", justifyContent: "center" }}>
         <FuzzySearch data={products[0]} />
       </div>
-      {/* !loggedIn &&  */}
       {window.sessionStorage.getItem("listings") ? (
         <div
           style={{

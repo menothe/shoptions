@@ -14,10 +14,7 @@ export default function ListingCard({ listing }) {
   const viewListingUrl = `/view-listing/${ListingID}`;
   const [loggedIn, setLoggedIn] = useContext(UserContext);
   return (
-    <Link
-      to={loggedIn ? editListingUrl : viewListingUrl}
-      style={{ textDecoration: "none" }}
-    >
+    <Link to={viewListingUrl} style={{ textDecoration: "none" }}>
       <Card sx={{ maxWidth: 345, margin: "20px", height: 300 }}>
         <CardActionArea>
           <CardMedia

@@ -110,7 +110,6 @@ export const handleUserSignIn = (
     })
     .then((response) => {
       if (response.status === 200) {
-        console.log("route history from click: ", routeHistory);
         const lastVisitedRoute = null;
         setLoggedIn(true);
         if (!lastVisitedRoute) {

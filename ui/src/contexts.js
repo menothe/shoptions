@@ -6,13 +6,10 @@ const RouteHistoryContext = createContext([]);
 
 export const RouteHistoryProvider = ({ children }) => {
   const location = useLocation();
-  console.log("current location: ", location);
   const [routeHistory, setRouteHistory] = useState([]);
 
   useEffect(() => {
     setRouteHistory((prevHistory) => {
-      //   console.log("previous history: ", prevHistory);
-      //   console.log("location.pathname: ", location.pathname);
       return [...prevHistory, location.pathname];
     });
   }, [location]);
