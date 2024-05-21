@@ -12,9 +12,13 @@ export default function ListingCard({ listing }) {
   const { Category, Description, StartingPrice, Title, ListingID } = listing;
   const editListingUrl = `/edit-listing/${ListingID}`;
   const viewListingUrl = `/view-listing/${ListingID}`;
-  const [loggedIn, setLoggedIn] = useContext(UserContext);
+  const isSellersDashboard = window.location.href.includes("sellers-dashboard");
+
   return (
-    <Link to={viewListingUrl} style={{ textDecoration: "none" }}>
+    <Link
+      to={isSellersDashboard ? editListingUrl : viewListingUrl}
+      style={{ textDecoration: "none" }}
+    >
       <Card sx={{ maxWidth: 345, margin: "20px", height: 300 }}>
         <CardActionArea>
           <CardMedia

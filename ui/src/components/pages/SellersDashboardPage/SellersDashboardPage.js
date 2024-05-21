@@ -1,4 +1,3 @@
-import FormDialog from "../../FormDialog";
 import { useEffect, useState } from "react";
 import { getCurrentTimePlusNumberOfDays } from "../../../helpers/utils";
 import axios from "axios";
@@ -9,6 +8,7 @@ import {
   CREATE_LISTING,
   GET_USER_LISTINGS,
 } from "../../../constants";
+import CreateNewListingModal from "../../CreateNewListingModal";
 
 const SellersDashboardPage = () => {
   const getUserListingsEndpoint = SERVER_HOST + GET_USER_LISTINGS;
@@ -80,7 +80,7 @@ const SellersDashboardPage = () => {
     <div>
       <div style={{ ...styles }}>
         <h1>Listings</h1>
-        <FormDialog handleSubmitListing={handleCreateListing} />
+        <CreateNewListingModal handleSubmitListing={handleCreateListing} />
         <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)" }}>
           {sellerListings &&
             sellerListings.map((listing, index) => {

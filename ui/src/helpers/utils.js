@@ -3,6 +3,7 @@ import {
   USER_LOGOUT,
   USER_LOGIN,
   USER_SIGNUP,
+  GET_LISTINGS_BY_USER_SEARCH,
 } from "../constants";
 import axios from "axios";
 import { NumericFormat } from "react-number-format";
@@ -101,13 +102,7 @@ export const handleUserSignIn = (
     password: data.get("password"),
   };
   axios
-    .post(SERVER_HOST + USER_LOGIN, loginRequestBody, {
-      withCredentials: true, // include credentials in the request
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    .post(SERVER_HOST + USER_LOGIN, loginRequestBody, corsConfiguration)
     .then((response) => {
       if (response.status === 200) {
         const lastVisitedRoute = null;
@@ -148,3 +143,27 @@ export const NumericFormatCustom = forwardRef(function NumericFormatCustom(
     />
   );
 });
+
+export const fetchListingsByUserSearch = (query) => {
+  const listingsSearchBody = {
+    query,
+  };
+  axios
+    .post(
+      SERVER_HOST + GET_LISTINGS_BY_USER_SEARCH,
+      listingsSearchBody,
+      corsConfiguration
+    )
+    .then((response) => {
+      console.log("response: ", response);
+    })
+    .catch((e) => console.log(e));
+};
+
+const corsConfiguration = {
+  withCredentials: true, // include credentials in the request
+  mode: "cors",
+  headers: {
+    "Content-Type": "application/json",
+  },
+};

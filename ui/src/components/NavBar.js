@@ -82,11 +82,12 @@ export default function NavBar() {
                 ) : null}
               </Menu>
             </IconButton>
-            <div
-              onClick={() => navigate("/")}
-              style={{ width: "90vw", cursor: "pointer" }}
-            >
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <div onClick={() => navigate("/")} style={{ width: "90vw" }}>
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{ flexGrow: 1, cursor: "pointer", width: "5vw" }}
+              >
                 Shoptions
               </Typography>
             </div>
