@@ -5,7 +5,8 @@ import {
   USER_SIGNUP,
 } from "../constants";
 import axios from "axios";
-import { useRouteHistory } from "../contexts";
+import { NumericFormat } from "react-number-format";
+import { forwardRef } from "react";
 
 export const formatDate = (futureDate) => {
   // Format the date string for UI display (month name, day, year, time with am/pm)
@@ -123,3 +124,28 @@ export const handleUserSignIn = (
       console.error("Error:", error);
     });
 };
+
+export const NumericFormatCustom = forwardRef(function NumericFormatCustom(
+  props,
+  ref
+) {
+  const { onChange, ...other } = props;
+
+  return (
+    <NumericFormat
+      {...other}
+      getInputRef={ref}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            name: props.name,
+            value: values?.value,
+          },
+        });
+      }}
+      thousandSeparator
+      valueIsNumericString
+      prefix="$"
+    />
+  );
+});

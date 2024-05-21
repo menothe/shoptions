@@ -8,8 +8,8 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { NumericFormat } from "react-number-format";
 import { ListingContext } from "../../../contexts";
+import { NumericFormatCustom } from "../../../helpers/utils";
 
 export default function EditListingPage() {
   const { listingID } = useParams();
@@ -59,8 +59,95 @@ export default function EditListingPage() {
     }
   }, []);
 
-  return (
-    <>
+  function TitleField() {
+    return (
+      <TextField
+        id="standard-basic"
+        label="Title"
+        variant="standard"
+        sx={{ marginBottom: "20px" }}
+        value={editedListing?.Title ?? "title"}
+        onChange={(e) => handleListingFieldChange(e, "Title")}
+      />
+    );
+  }
+
+  function CategoryField() {
+    return (
+      <FormControl sx={{ width: "10%", margin: "20px" }}>
+        <InputLabel id="demo-simple-select-label">Category</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={editedListing?.Category ?? "games"}
+          label="Category"
+          onChange={(e) => handleListingFieldChange(e, "Category")}
+        >
+          <MenuItem value={"books"}>Books</MenuItem>
+          <MenuItem value={"electronics"}>Electronics</MenuItem>
+          <MenuItem value={"collectibles"}>Collectibles</MenuItem>
+          <MenuItem value={"apparel"}>Apparel</MenuItem>
+        </Select>
+      </FormControl>
+    );
+  }
+
+  function DescriptionField() {
+    return (
+      <TextField
+        id="outlined-multiline-static"
+        label="Description"
+        rows={4}
+        value={editedListing?.Description ?? "description"}
+        onChange={(e) => handleListingFieldChange(e, "Description")}
+      />
+    );
+  }
+
+  function StartingPriceField() {
+    return (
+      <div
+        className="starting price"
+        style={{ marginTop: 10, display: "flex" }}
+      >
+        <TextField
+          label="Starting Price"
+          value={listing?.StartingPrice ?? 0}
+          name="price"
+          id="formatted-numberformat-input"
+          InputProps={{
+            inputComponent: NumericFormatCustom,
+          }}
+          variant="standard"
+          required
+        />
+      </div>
+    );
+  }
+
+  function DurationField() {
+    return (
+      <FormControl variant="standard" required className="field duration">
+        <InputLabel id="demo-simple-select-label">Duration</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={listing?.Duration ?? 7}
+          label="Duration"
+          name="duration"
+        >
+          <MenuItem value={1}>1 Day</MenuItem>
+          <MenuItem value={3}>3 Days</MenuItem>
+          <MenuItem value={5}>5 Days</MenuItem>
+          <MenuItem value={7}>7 Days</MenuItem>
+        </Select>
+        <FormHelperText>Select listing duration</FormHelperText>
+      </FormControl>
+    );
+  }
+
+  function EditListingFormWrapper({ children }) {
+    return (
       <div
         style={{
           display: "flex",
@@ -68,91 +155,18 @@ export default function EditListingPage() {
           alignItems: "center",
         }}
       >
-        <TextField
-          id="standard-basic"
-          label="Title"
-          variant="standard"
-          sx={{ marginBottom: "20px" }}
-          value={editedListing?.Title ?? "title"}
-          onChange={(e) => handleListingFieldChange(e, "Title")}
-        />
-        <FormControl sx={{ width: "10%", margin: "20px" }}>
-          <InputLabel id="demo-simple-select-label">Category</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={editedListing?.Category ?? "games"}
-            label="Category"
-            onChange={(e) => handleListingFieldChange(e, "Category")}
-          >
-            <MenuItem value={"books"}>Books</MenuItem>
-            <MenuItem value={"electronics"}>Electronics</MenuItem>
-            <MenuItem value={"collectibles"}>Collectibles</MenuItem>
-            <MenuItem value={"apparel"}>Apparel</MenuItem>
-          </Select>
-        </FormControl>
-        <TextField
-          id="outlined-multiline-static"
-          label="Description"
-          rows={4}
-          value={editedListing?.Description ?? "description"}
-          onChange={(e) => handleListingFieldChange(e, "Description")}
-        />
-        <div className="field price" style={{ marginTop: 10, display: "flex" }}>
-          <TextField
-            label="Starting Price"
-            value={listing?.StartingPrice ?? 0}
-            name="price"
-            id="formatted-numberformat-input"
-            InputProps={{
-              inputComponent: NumericFormatCustom,
-            }}
-            variant="standard"
-            required
-          />
-        </div>
-        <FormControl variant="standard" required className="field duration">
-          <InputLabel id="demo-simple-select-label">Duration</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={listing?.Duration ?? 7}
-            label="Duration"
-            name="duration"
-          >
-            <MenuItem value={1}>1 Day</MenuItem>
-            <MenuItem value={3}>3 Days</MenuItem>
-            <MenuItem value={5}>5 Days</MenuItem>
-            <MenuItem value={7}>7 Days</MenuItem>
-          </Select>
-          <FormHelperText>Select listing duration</FormHelperText>
-        </FormControl>
+        {children}
       </div>
-    </>
-  );
-}
-
-const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
-  props,
-  ref
-) {
-  const { onChange, ...other } = props;
+    );
+  }
 
   return (
-    <NumericFormat
-      {...other}
-      getInputRef={ref}
-      onValueChange={(values) => {
-        onChange({
-          target: {
-            name: props.name,
-            value: values?.value,
-          },
-        });
-      }}
-      thousandSeparator
-      valueIsNumericString
-      prefix="$"
-    />
+    <EditListingFormWrapper>
+      <TitleField />
+      <CategoryField />
+      <DescriptionField />
+      <StartingPriceField />
+      <DurationField />
+    </EditListingFormWrapper>
   );
-});
+}
