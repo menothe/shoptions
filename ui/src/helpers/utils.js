@@ -144,7 +144,7 @@ export const NumericFormatCustom = forwardRef(function NumericFormatCustom(
   );
 });
 
-export const fetchListingsByUserSearch = (query) => {
+export const fetchListingsByUserSearch = (query, setSearchResults) => {
   const listingsSearchBody = {
     query,
   };
@@ -155,7 +155,9 @@ export const fetchListingsByUserSearch = (query) => {
       corsConfiguration
     )
     .then((response) => {
-      console.log("response: ", response);
+      setSearchResults(response.data);
+      console.log("results: ", response.data);
+      return response.data;
     })
     .catch((e) => console.log(e));
 };

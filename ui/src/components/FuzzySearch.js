@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Box, Button, TextField } from "@mui/material";
 import { fetchListingsByUserSearch } from "../helpers/utils";
+import { useNavigate } from "react-router-dom";
+import { SearchResultsContext } from "../contexts";
 
-const FuzzySearch = ({ data }) => {
+const FuzzySearch = () => {
   const [query, setQuery] = useState("");
+  const [searchResults, setSearchResults] = useContext(SearchResultsContext);
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setQuery(e.target.value);
@@ -11,7 +15,8 @@ const FuzzySearch = ({ data }) => {
 
   const handleFuzzySearch = (e, query) => {
     e.preventDefault();
-    fetchListingsByUserSearch(query);
+    fetchListingsByUserSearch(query, setSearchResults);
+    navigate("/sch");
   };
 
   const inputStyles = {

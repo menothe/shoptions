@@ -25,3 +25,4 @@ export const useRouteHistory = () => useContext(RouteHistoryContext);
 
 export const ListingContext = createContext();
 export const UserContext = createContext();
+export const SearchResultsContext = createContext();

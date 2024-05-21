@@ -7,11 +7,18 @@ import SellersDashboardPage from "./components/pages/SellersDashboardPage/Seller
 import { useState, useEffect } from "react";
 import HomePage from "./components/pages/HomePage/HomePage";
 import ViewListingPage from "./components/pages/ViewListingPage/ViewListingPage";
-import { RouteHistoryProvider, UserContext, ListingContext } from "./contexts";
+import {
+  RouteHistoryProvider,
+  UserContext,
+  ListingContext,
+  SearchResultsContext,
+} from "./contexts";
+import SearchResultsPage from "./components/pages/SearchResultsPage/SearchResultsPage";
 
 function App() {
   const [listings, setListings] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     if (document.cookie.length) {
@@ -22,28 +29,33 @@ function App() {
   return (
     <UserContext.Provider value={[loggedIn, setLoggedIn]}>
       <ListingContext.Provider value={[listings, setListings]}>
-        <Router>
-          <RouteHistoryProvider>
-            <NavBar loggedIn={loggedIn} />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/signup" element={<SignUpPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route
-                path="/sellers-dashboard"
-                element={<SellersDashboardPage />}
-              />
-              <Route
-                path="/edit-listing/:listingID"
-                element={<EditListingPage />}
-              />
-              <Route
-                path="/view-listing/:listingID"
-                element={<ViewListingPage />}
-              />
-            </Routes>
-          </RouteHistoryProvider>
-        </Router>
+        <SearchResultsContext.Provider
+          value={[searchResults, setSearchResults]}
+        >
+          <Router>
+            <RouteHistoryProvider>
+              <NavBar loggedIn={loggedIn} />
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/signup" element={<SignUpPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/sch" element={<SearchResultsPage />} />
+                <Route
+                  path="/sellers-dashboard"
+                  element={<SellersDashboardPage />}
+                />
+                <Route
+                  path="/edit-listing/:listingID"
+                  element={<EditListingPage />}
+                />
+                <Route
+                  path="/view-listing/:listingID"
+                  element={<ViewListingPage />}
+                />
+              </Routes>
+            </RouteHistoryProvider>
+          </Router>
+        </SearchResultsContext.Provider>
       </ListingContext.Provider>
     </UserContext.Provider>
   );
