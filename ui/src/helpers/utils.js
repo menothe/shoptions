@@ -4,6 +4,7 @@ import {
   USER_LOGIN,
   USER_SIGNUP,
   GET_LISTINGS_BY_USER_SEARCH,
+  CREATE_BID,
 } from "../constants";
 import axios from "axios";
 import { NumericFormat } from "react-number-format";
@@ -105,7 +106,7 @@ export const handleUserSignIn = (
     .post(SERVER_HOST + USER_LOGIN, loginRequestBody, corsConfiguration)
     .then((response) => {
       if (response.status === 200) {
-        const lastVisitedRoute = null;
+        const lastVisitedRoute = routeHistory[routeHistory.length - 2];
         setLoggedIn(true);
         if (!lastVisitedRoute) {
           navigateFn("/");
@@ -156,8 +157,20 @@ export const fetchListingsByUserSearch = (query, setSearchResults) => {
     )
     .then((response) => {
       setSearchResults(response.data);
-      console.log("results: ", response.data);
       return response.data;
+    })
+    .catch((e) => console.log(e));
+};
+
+export const submitUserBid = (amount, listingID, setBid) => {
+  const bidRequestBody = {
+    bid_amount: parseFloat(amount),
+    listing_id: listingID,
+  };
+  axios
+    .post(SERVER_HOST + CREATE_BID, bidRequestBody, corsConfiguration)
+    .then((response) => {
+      setBid(response.data.Amount);
     })
     .catch((e) => console.log(e));
 };

@@ -28,6 +28,7 @@ func (bh *BidHandler) CreateBid(c *gin.Context) {
 		ListingID uuid.UUID `json:"listing_id"`
 	}{}
 	if err := c.BindJSON(&request); err != nil {
+		println("first err block")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "failed to read request body",
 		})
