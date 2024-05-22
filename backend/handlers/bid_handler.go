@@ -53,3 +53,36 @@ func (bh *BidHandler) CreateBid(c *gin.Context) {
 
 	c.IndentedJSON(http.StatusOK, newBid)
 }
+
+func (bh *BidHandler) GetHighestBidder(c * gin.Context) {
+	id := c.Param("id")
+	listingID, err := uuid.Parse(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to update listing",
+		})
+		return
+	}
+	_, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "user must be logged in to perform this action",
+		})
+		return
+	}
+	userID, err := bh.BidServiceImpl.DetermineHighestBidder(listingID)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "failed to determine highest bidder",
+		})
+		return
+	}
+	highestBidder := struct{
+		UserID uuid.UUID `json:"user_id"`
+	}{
+		UserID: *userID,
+	}
+	c.IndentedJSON(http.StatusAccepted, highestBidder)
+
+}

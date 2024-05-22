@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"sort"
 
 	"github.com/google/uuid"
 	"github.com/menothe/shoptions/models"
@@ -38,7 +39,34 @@ func (bs *BidServiceImpl) CreateBid(bidAmount float64, listingID uuid.UUID, user
 	return &newBid, nil
 }
 
+func (bs *BidServiceImpl) DetermineHighestBidder(listingID uuid.UUID) (*uuid.UUID, error) {
+	//get all bids for this listing
+	var bids []models.Bid
+	result := bs.DB.Where("listing_id = ?", listingID).Find(&bids)
+
+	if result.Error != nil {
+		return nil, ErrFailedToFetchBidsForListing
+	}
+	//sort all the bids in decreasing order
+	    // Sort the bids slice in decreasing order of price
+	sort.Sort(ByPriceDesc(bids))
+
+	highestBid := bids[0] //grab the first one
+	userID := highestBid.UserID
+
+	return (*uuid.UUID)(&userID), nil //return the userid off it
+}
+
+
+// ByPriceDesc implements sort.Interface based on the Price field in descending order.
+type ByPriceDesc []models.Bid
+
+func (a ByPriceDesc) Len() int           { return len(a) }
+func (a ByPriceDesc) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByPriceDesc) Less(i, j int) bool { return a[i].Amount > a[j].Amount } // Note the '>' for descending order
+
 //ERRORS
 var (
 	ErrFailedToCreateBid = errors.New("unable to create a new bid")
+	ErrFailedToFetchBidsForListing = errors.New("unable to locate bids for provided listing")
 )

@@ -68,8 +68,16 @@ func (server *Server) SetupRoutes() {
 
 	//bids
 	bidGroup := apiGroup.Group("/bids")
-	bidGroup.Use(server.UserHandler.RequireAuth)
+	bidGroup.Use(func(c *gin.Context) {
+		//Skip authentication for getting all listings
+		if c.Request.URL.Path == "/api/bids/highest_bidder" {
+			c.Next()
+			return
+		}
+		server.UserHandler.RequireAuth(c)
+	})
 	bidGroup.POST("/create", server.BidHandler.CreateBid)
+	bidGroup.GET("/highest_bidder/:id", server.BidHandler.GetHighestBidder)
 
 	server.Router.Run("localhost:8080")
 }

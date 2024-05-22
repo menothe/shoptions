@@ -1,27 +1,31 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { ListingContext, UserContext } from "../../../contexts";
-import { submitUserBid } from "../../../helpers/utils";
+import { fetchHighestBidder, submitUserBid } from "../../../helpers/utils";
 import Countdown from "../../ListingCountDown";
 import ListingCountdown from "../../ListingCountDown";
+import HighestBidder from "../../HighestBidder";
 
 export default function ViewListingPage() {
-  const [loggedIn, setLoggedIn] = useContext(UserContext);
+  const loggedIn = useContext(UserContext)[0];
   const [bidAmount, setBidAmount] = useState(0);
   const navigate = useNavigate();
+  const { listingID } = useParams();
+  const [listings, setListings] = useContext(ListingContext);
+  let listing = listings.filter((item) => item.ListingID === listingID)[0];
+  const { Title, Description, Category, StartingPrice, Duration, EndTime } =
+    listing ?? {};
+  const [highestBidder, setHighestBidder] = useState(null);
+  // const isHighestBidder = highestBidder === userID;
+
   useEffect(() => {
     if (window.sessionStorage.length) {
       setListings(JSON.parse(window.sessionStorage.getItem("listings")));
     } else if (listings.length) {
       window.sessionStorage.setItem("listings", listings);
     }
+    fetchHighestBidder(listingID, setHighestBidder);
   }, []);
-  const { listingID } = useParams();
-  const [listings, setListings] = useContext(ListingContext);
-  let listing = listings.filter((item) => item.ListingID === listingID)[0];
-  const { Title, Description, Category, StartingPrice, Duration, EndTime } =
-    listing ?? {};
-
   const handleSubmitBid = (e) => {
     e.preventDefault();
     if (!loggedIn) {
@@ -50,6 +54,7 @@ export default function ViewListingPage() {
       <span>Starting Price: {StartingPrice}</span>
       <span>Duration: {Duration}</span>
       <ListingCountdown endTime={EndTime} />
+      {highestBidder ? <HighestBidder /> : null}
       <input
         type="text"
         placeholder="Price"

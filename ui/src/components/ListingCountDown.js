@@ -1,12 +1,11 @@
 import Countdown from "react-countdown";
 
 export default function ListingCountdown({ endTime }) {
-  console.log("endtime ", endTime);
   // Random component
-  const Completionist = () => <span>You are good to go!</span>;
+  const Completionist = () => <span>This listing has ended</span>;
 
   // Renderer callback with condition
-  const renderer = ({ hours, minutes, seconds, completed }) => {
+  const renderer = ({ days, hours, minutes, seconds, completed }) => {
     if (completed) {
       // Render a completed state
       return <Completionist />;
@@ -14,7 +13,7 @@ export default function ListingCountdown({ endTime }) {
       // Render a countdown
       return (
         <span>
-          {hours}:{minutes}:{seconds}
+          {days} days {hours} hours {minutes} minutes {seconds} seconds
         </span>
       );
     }
@@ -22,7 +21,6 @@ export default function ListingCountdown({ endTime }) {
   return (
     <>
       <Countdown date={endTime} renderer={renderer} />
-      <span>hello</span>
     </>
   );
 }
