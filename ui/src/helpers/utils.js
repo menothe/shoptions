@@ -108,11 +108,13 @@ export const handleUserSignIn = (
     .then((response) => {
       if (response.status === 200) {
         const lastVisitedRoute = routeHistory[routeHistory.length - 2];
+        const redirectRoute =
+          lastVisitedRoute === "/login" ? "/" : lastVisitedRoute;
         setLoggedIn(true);
-        if (!lastVisitedRoute) {
+        if (!redirectRoute) {
           navigateFn("/");
         } else {
-          navigateFn(lastVisitedRoute);
+          navigateFn(redirectRoute);
         }
       }
     })
@@ -180,6 +182,7 @@ export const fetchHighestBidder = (listingID, setHighestBidder) => {
   axios
     .get(SERVER_HOST + GET_HIGHEST_BIDDER + `/${listingID}`, corsConfiguration)
     .then((response) => {
+      console.log("highest bidder: ", response);
       setHighestBidder(response.data.user_id);
     })
     .catch((e) => console.log(e));
