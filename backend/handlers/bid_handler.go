@@ -73,6 +73,11 @@ func (bh *BidHandler) GetHighestBidder(c * gin.Context) {
 	}
 	userID, err := bh.BidServiceImpl.DetermineHighestBidder(listingID)
 
+	if userID == nil {
+		c.JSON(http.StatusOK, gin.H{})
+		return
+	}
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "failed to determine highest bidder",
@@ -84,6 +89,6 @@ func (bh *BidHandler) GetHighestBidder(c * gin.Context) {
 	}{
 		UserID: *userID,
 	}
-	c.IndentedJSON(http.StatusAccepted, highestBidder)
+	c.IndentedJSON(http.StatusOK, highestBidder)
 
 }

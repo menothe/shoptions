@@ -27,7 +27,7 @@ export default function NavBar() {
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setAnchorEl(false);
   };
 
   //     <Button
@@ -67,21 +67,21 @@ export default function NavBar() {
               onClick={handleClick}
             >
               <MenuIcon id="hamburger" />
-              <Menu
-                id="hamburger"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-              >
-                {loggedIn ? (
-                  <MenuItem
-                    onClick={() => handleMenuItemRouting("/sellers-dashboard")}
-                  >
-                    Sellers Dashboard
-                  </MenuItem>
-                ) : null}
-              </Menu>
             </IconButton>
+            <Menu
+              id="hamburger"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+            >
+              {loggedIn ? (
+                <MenuItem
+                  onClick={() => handleMenuItemRouting("/sellers-dashboard")}
+                >
+                  Sellers Dashboard
+                </MenuItem>
+              ) : null}
+            </Menu>
             <div onClick={() => navigate("/")} style={{ width: "90vw" }}>
               <Typography
                 variant="h6"

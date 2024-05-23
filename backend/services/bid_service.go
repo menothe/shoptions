@@ -48,14 +48,17 @@ func (bs *BidServiceImpl) DetermineHighestBidder(listingID uuid.UUID) (*uuid.UUI
 	if result.Error != nil {
 		return nil, ErrFailedToFetchBidsForListing
 	}
-	//sort all the bids in decreasing order
+	if len(bids) > 0 {
+		//sort all the bids in decreasing order
 	    // Sort the bids slice in decreasing order of price
-	sort.Sort(ByPriceDesc(bids))
+		sort.Sort(ByPriceDesc(bids))
 
-	highestBid := bids[0] //grab the first one
-	userID := highestBid.UserID
+		highestBid := bids[0] //grab the first one
+		userID := highestBid.UserID
+		return (*uuid.UUID)(&userID), nil //return the userid off it
+	}
+	return nil, nil
 
-	return (*uuid.UUID)(&userID), nil //return the userid off it
 }
 
 
