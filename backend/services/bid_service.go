@@ -11,6 +11,7 @@ import (
 
 type BidService interface {
 	CreateBid(float64, any) (*models.Bid, error)
+	DetermineHighestBidder(uuid.UUID) (*uuid.UUID, error)
 }
 
 type BidServiceImpl struct {

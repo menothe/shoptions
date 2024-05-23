@@ -11,6 +11,7 @@ import (
 
 type BidHandlerBehavior interface {
 	CreateBid(* gin.Context)
+	GetHighestBidder(* gin.Context)
 }
 
 type BidHandler struct {
