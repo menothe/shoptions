@@ -9,9 +9,9 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../contexts";
 
 export default function ListingCard({ listing }) {
-  const { Category, Description, StartingPrice, Title, ListingID } = listing;
-  const editListingUrl = `/edit-listing/${ListingID}`;
-  const viewListingUrl = `/view-listing/${ListingID}`;
+  const { category, description, startingPrice, title, listingID } = listing;
+  const editListingUrl = `/edit-listing/${listingID}`;
+  const viewListingUrl = `/view-listing/${listingID}`;
   const isSellersDashboard = window.location.href.includes("sellers-dashboard");
 
   return (
@@ -29,10 +29,10 @@ export default function ListingCard({ listing }) {
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
-              {Title}
+              {title}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {Description}
+              {description}
             </Typography>
           </CardContent>
         </CardActionArea>

@@ -15,7 +15,7 @@ export default function EditListingPage() {
   const { listingID } = useParams();
   const [listings, setListings] = useContext(ListingContext);
   const listing = listings.filter(
-    (listing) => listing.ListingID === listingID
+    (listing) => listing.listingID === listingID
   )[0];
   const [editedListing, setEditedListing] = useState(listing);
 
@@ -32,7 +32,7 @@ export default function EditListingPage() {
     // mutate the json by replacing the current listing on this page with the new one (with updated field values ie. e.target.value)
     const updatedSessionStorageListings = sessionStorageListings.map(
       (listing) => {
-        if (listing.ListingID === listingID) {
+        if (listing.listingID === listingID) {
           listing[field] = e.target.value;
           return listing;
         }
@@ -53,7 +53,7 @@ export default function EditListingPage() {
         window.sessionStorage.getItem("listings")
       );
       const foundListing = sessionStorageListings.filter(
-        (storageListing) => storageListing.ListingID === listingID
+        (storageListing) => storageListing.listingID === listingID
       )[0];
       setEditedListing(foundListing);
     }
@@ -66,7 +66,7 @@ export default function EditListingPage() {
         label="Title"
         variant="standard"
         sx={{ marginBottom: "20px" }}
-        value={editedListing?.Title ?? "title"}
+        value={editedListing?.title ?? "title"}
         onChange={(e) => handleListingFieldChange(e, "Title")}
       />
     );
@@ -79,7 +79,7 @@ export default function EditListingPage() {
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={editedListing?.Category ?? "games"}
+          value={editedListing?.category ?? "games"}
           label="Category"
           onChange={(e) => handleListingFieldChange(e, "Category")}
         >
@@ -98,8 +98,8 @@ export default function EditListingPage() {
         id="outlined-multiline-static"
         label="Description"
         rows={4}
-        value={editedListing?.Description ?? "description"}
-        onChange={(e) => handleListingFieldChange(e, "Description")}
+        value={editedListing?.description ?? "description"}
+        onChange={(e) => handleListingFieldChange(e, "description")}
       />
     );
   }
@@ -112,7 +112,7 @@ export default function EditListingPage() {
       >
         <TextField
           label="Starting Price"
-          value={listing?.StartingPrice ?? 0}
+          value={listing?.startingPrice ?? 0}
           name="price"
           id="formatted-numberformat-input"
           InputProps={{
@@ -132,7 +132,7 @@ export default function EditListingPage() {
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={listing?.Duration ?? 7}
+          value={listing?.duration ?? 7}
           label="Duration"
           name="duration"
         >

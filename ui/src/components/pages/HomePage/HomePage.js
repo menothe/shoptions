@@ -1,10 +1,9 @@
 import { useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import FuzzySearch from "../../FuzzySearch";
 import { GET_ALL_LISTINGS, SERVER_HOST } from "../../../constants";
 import axios from "axios";
 import ListingCard from "../../ListingCard";
-import { ListingContext, UserContext } from "../../../contexts";
+import { ListingContext } from "../../../contexts";
 
 export default function HomePage() {
   const [listings, setListings] = useContext(ListingContext);
@@ -57,7 +56,7 @@ export default function HomePage() {
             }}
           >
             {listings.map((listing) => {
-              return <ListingCard key={listing.ListingID} listing={listing} />;
+              return <ListingCard key={listing.listingID} listing={listing} />;
             })}
           </div>
         </div>

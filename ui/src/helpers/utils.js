@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import { NumericFormat } from "react-number-format";
 import { forwardRef } from "react";
+import { Paper, styled } from "@mui/material";
 
 export const formatDate = (futureDate) => {
   // Format the date string for UI display (month name, day, year, time with am/pm)
@@ -195,3 +196,11 @@ const corsConfiguration = {
     "Content-Type": "application/json",
   },
 };
+
+export const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
