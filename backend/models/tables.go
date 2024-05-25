@@ -27,6 +27,7 @@ type Listing struct {
 	UserID        uuid.UUID `json:"userID"`
 	CreatedAt     time.Time `json:"createdAt"`
 	UpdatedAt     time.Time `json:"updatedAt"`
+	BidCount      uint64    `json:"bidCount"`
 }
 
 type User struct {

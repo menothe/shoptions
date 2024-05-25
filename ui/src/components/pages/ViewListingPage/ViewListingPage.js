@@ -1,27 +1,15 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { ListingContext, UserContext } from "../../../contexts";
-import {
-  Item,
-  fetchHighestBidder,
-  submitUserBid,
-} from "../../../helpers/utils";
+import { fetchHighestBidder, submitUserBid } from "../../../helpers/utils";
 import ListingCountdown from "../../ListingCountDown";
 import HighestBidder from "../../HighestBidder";
-import ViewListingHeader from "../../ViewListing/ViewListingHeader";
 import ViewListingTitle from "../../ViewListing/ViewListingTitle";
 import ViewListingDescription from "../../ViewListing/ViewListingDescription";
-import ViewListingStartingPrice from "../../ViewListing/ViewListingDetails/ViewListingStartingPrice";
-import ViewListingDuration from "../../ViewListing/ViewListingDetails/ViewListingDuration";
-import ViewListingEndTime from "../../ViewListing/ViewListingDetails/ViewListingEndTime";
-import ViewListingCountdown from "../../ViewListing/ViewListingDetails/ViewListingCountdown";
-import ViewListingCategory from "../../ViewListing/ViewListingDetails/ViewListingCategory";
 import ViewListingBidCount from "../../ViewListing/ViewListingBidCount";
 import ViewListingPlaceBid from "../../ViewListing/ViewListingPlaceBid";
 import Grid from "@mui/material/Grid";
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import ViewListingPhotoGrid from "../../ViewListing/ViewListingPhotoGrid";
 import ViewListingDetails from "../../ViewListing/ViewListingDetails/ViewListingDetails";
 
@@ -31,7 +19,7 @@ export default function ViewListingPage() {
   const navigate = useNavigate();
   const { listingID } = useParams();
   const [listings, setListings] = useContext(ListingContext);
-  let listing = listings.filter((item) => item.ListingID === listingID)[0];
+  let listing = listings.filter((item) => item.listingID === listingID)[0];
   const { title, description, category, startingPrice, duration, endTime } =
     listing ?? {};
   const [highestBidder, setHighestBidder] = useState(null);
@@ -50,12 +38,6 @@ export default function ViewListingPage() {
     if (!loggedIn) {
       navigate("/login");
     } else {
-      //TODO: CALL BACKEND 'BID' ENDPOINT
-      //POST CALL:
-      /**
-       * USERID, LISTINGID, BIDAMOUNT
-       *
-       */
       submitUserBid(bidAmount, listingID, setBidAmount);
     }
   };
@@ -65,13 +47,20 @@ export default function ViewListingPage() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, border: "1px solid red" }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        width: "70%",
+        ml: "auto",
+        mr: "auto",
+        mt: "5vw",
+      }}
+    >
       <Grid container spacing={2} sx={{ flexDirection: "column" }}>
-        <ViewListingHeader header={"View Listing"} />
-        <Grid sx={{ display: "flex", marginLeft: "5vw" }}>
+        <Grid sx={{ display: "flex", justifyContent: "space-between" }}>
           <ViewListingTitle title={title} />
-          <Grid sx={{ display: "flex" }}>
-            <ViewListingBidCount />
+          <Grid sx={{ display: "flex", ml: 7 }}>
+            <ViewListingBidCount bidCount={0}/>
             <ViewListingPlaceBid />
           </Grid>
         </Grid>

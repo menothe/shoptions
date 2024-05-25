@@ -7,12 +7,15 @@ import ImageListItem from "@mui/material/ImageListItem";
 export default function ViewListingPhotoGrid() {
   return (
     <Item sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
-      <ImageList sx={{ width: "90vw", height: 450 }} cols={6} rowHeight={164}>
+      <ImageList sx={{ width: "80vw", height: 500 }} cols={3} rowHeight={164}>
         {itemData.map((item) => (
-          <ImageListItem key={item.img}>
+          <ImageListItem
+            key={item.img}
+            sx={{ marginTop: "27%", marginBottom: "27%" }}
+          >
             <img
-              srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-              src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
+              srcSet={`${item.img}?w=180&h=180&fit=crop&auto=format&dpr=2 2x`}
+              src={`${item.img}?w=180&h=180&fit=crop&auto=format`}
               alt={item.title}
               loading="lazy"
             />

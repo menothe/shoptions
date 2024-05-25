@@ -1,11 +1,15 @@
 import { Item } from "../../helpers/utils";
 
-export default function ViewListingDescription() {
+export default function ViewListingDescription({ description }) {
   return (
     <Item
-      sx={{ display: "flex", justifyContent: "flex-start", marginLeft: "5vw" }}
+      sx={{
+        display: "flex",
+        justifyContent: "flex-start",
+        fontSize: "1.075rem",
+      }}
     >
-      View Listing Description
+      {description}
     </Item>
   );
 }

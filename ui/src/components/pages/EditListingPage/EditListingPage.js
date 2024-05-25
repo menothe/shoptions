@@ -13,7 +13,7 @@ import { NumericFormatCustom } from "../../../helpers/utils";
 
 export default function EditListingPage() {
   const { listingID } = useParams();
-  const [listings, setListings] = useContext(ListingContext);
+  const listings = useContext(ListingContext)[0];
   const listing = listings.filter(
     (listing) => listing.listingID === listingID
   )[0];
