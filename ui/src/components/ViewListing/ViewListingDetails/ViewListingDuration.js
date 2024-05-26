@@ -1,5 +1,5 @@
 import { Item } from "../../../helpers/utils";
 
-export default function ViewListingDuration() {
-  return <Item>View Listing Duration</Item>;
+export default function ViewListingDuration({ duration }) {
+  return <Item>{duration}</Item>;
 }

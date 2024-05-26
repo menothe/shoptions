@@ -10,7 +10,10 @@ export default function HomePage() {
   const getUserListingsEndpoint = SERVER_HOST + GET_ALL_LISTINGS;
 
   useEffect(() => {
-    if (!window.sessionStorage.length) {
+    const sessionStorageListings = JSON.parse(
+      window.sessionStorage.getItem("listings")
+    );
+    if (!sessionStorageListings?.length) {
       axios
         .get(getUserListingsEndpoint, {
           withCredentials: true,
@@ -30,7 +33,7 @@ export default function HomePage() {
           console.error("err: ", e);
         });
     } else {
-      setListings(JSON.parse(window.sessionStorage.getItem("listings")));
+      setListings(sessionStorageListings);
     }
   }, []);
 

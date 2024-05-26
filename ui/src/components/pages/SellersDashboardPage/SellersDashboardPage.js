@@ -15,7 +15,10 @@ const SellersDashboardPage = () => {
   const [sellerListings, setSellerListings] = useState([]);
 
   useEffect(() => {
-    if (!window.sessionStorage.sellerListings) {
+    const sessionStorageSellerListings = JSON.parse(
+      window.sessionStorage.getItem("sellerListings")
+    );
+    if (!sessionStorageSellerListings?.length) {
       axios
         .get(getUserListingsEndpoint, {
           withCredentials: true,
@@ -25,7 +28,6 @@ const SellersDashboardPage = () => {
           },
         })
         .then((response) => {
-          console.log("are we getting the listings: ", response.data);
           setSellerListings(response.data);
           window.sessionStorage.setItem(
             "sellerListings",
@@ -36,9 +38,7 @@ const SellersDashboardPage = () => {
           console.error("err: ", e);
         });
     } else {
-      setSellerListings(
-        JSON.parse(window.sessionStorage.getItem("sellerListings"))
-      );
+      setSellerListings(sessionStorageSellerListings);
     }
   }, []);
 

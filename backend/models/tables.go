@@ -25,9 +25,10 @@ type Listing struct {
 	Duration      uint8     `json:"duration"`
 	Active        bool      `gorm:"default:true" json:"active"`
 	UserID        uuid.UUID `json:"userID"`
+	Seller        string    `json:"seller"`
 	CreatedAt     time.Time `json:"createdAt"`
 	UpdatedAt     time.Time `json:"updatedAt"`
-	BidCount      uint64    `json:"bidCount"`
+	BidCount      *int      `json:"bidCount" gorm:"default:0"`
 }
 
 type User struct {

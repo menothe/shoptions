@@ -11,7 +11,6 @@ export default function ViewListingPhotoGrid() {
         {itemData.map((item) => (
           <ImageListItem
             key={item.img}
-            sx={{ marginTop: "27%", marginBottom: "27%" }}
           >
             <img
               srcSet={`${item.img}?w=180&h=180&fit=crop&auto=format&dpr=2 2x`}

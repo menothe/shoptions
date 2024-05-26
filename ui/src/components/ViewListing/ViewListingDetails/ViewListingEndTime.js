@@ -1,5 +1,5 @@
 import { Item } from "../../../helpers/utils";
 
-export default function ViewListingEndTime() {
-  return <Item>View Listing End Time</Item>;
+export default function ViewListingEndTime({ endTime }) {
+  return <Item>{endTime}</Item>;
 }

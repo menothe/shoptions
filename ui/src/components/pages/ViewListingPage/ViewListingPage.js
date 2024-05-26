@@ -7,7 +7,6 @@ import HighestBidder from "../../HighestBidder";
 import ViewListingTitle from "../../ViewListing/ViewListingTitle";
 import ViewListingDescription from "../../ViewListing/ViewListingDescription";
 import ViewListingBidCount from "../../ViewListing/ViewListingBidCount";
-import ViewListingPlaceBid from "../../ViewListing/ViewListingPlaceBid";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import ViewListingPhotoGrid from "../../ViewListing/ViewListingPhotoGrid";
@@ -20,8 +19,15 @@ export default function ViewListingPage() {
   const { listingID } = useParams();
   const [listings, setListings] = useContext(ListingContext);
   let listing = listings.filter((item) => item.listingID === listingID)[0];
-  const { title, description, category, startingPrice, duration, endTime } =
-    listing ?? {};
+  const {
+    title,
+    description,
+    category,
+    startingPrice,
+    duration,
+    endTime,
+    seller,
+  } = listing ?? {};
   const [highestBidder, setHighestBidder] = useState(null);
   // const isHighestBidder = highestBidder === userID;
 
@@ -60,8 +66,7 @@ export default function ViewListingPage() {
         <Grid sx={{ display: "flex", justifyContent: "space-between" }}>
           <ViewListingTitle title={title} />
           <Grid sx={{ display: "flex", ml: 7 }}>
-            <ViewListingBidCount bidCount={0}/>
-            <ViewListingPlaceBid />
+            <ViewListingBidCount bidCount={0} />
           </Grid>
         </Grid>
         <ViewListingDescription description={description} />
@@ -70,8 +75,9 @@ export default function ViewListingPage() {
           duration={duration}
           category={category}
           startingPrice={startingPrice}
+          username={seller}
+          endTime={endTime}
         />
-        <ListingCountdown endTime={endTime} />
         {highestBidder ? <HighestBidder /> : null}
         <input
           type="text"

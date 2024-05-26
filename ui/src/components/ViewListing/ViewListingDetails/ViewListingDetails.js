@@ -11,12 +11,13 @@ export default function ViewListingDetails({
   category,
   duration,
   endTime,
+  username,
 }) {
   return (
     <Item sx={{ display: "flex" }}>
       <ViewListingStartingPrice startingPrice={startingPrice} />
       <ViewListingCategory category={category} />
-      <ViewListingSeller />
+      <ViewListingSeller username={username}/>
       <ViewListingDuration duration={duration} />
       <ViewListingEndTime endTime={endTime} />
       <ViewListingCountdown endTime={endTime} />

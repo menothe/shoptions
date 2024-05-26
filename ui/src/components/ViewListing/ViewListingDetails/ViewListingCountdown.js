@@ -1,5 +1,10 @@
 import { Item } from "../../../helpers/utils";
+import ListingCountdown from "../../ListingCountDown";
 
-export default function ViewListingCountdown() {
-  return <Item>View Listing Countdown</Item>;
+export default function ViewListingCountdown({ endTime }) {
+  return (
+    <Item>
+      <ListingCountdown endTime={endTime} />
+    </Item>
+  );
 }

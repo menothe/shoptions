@@ -183,7 +183,6 @@ export const fetchHighestBidder = (listingID, setHighestBidder) => {
   axios
     .get(SERVER_HOST + GET_HIGHEST_BIDDER + `/${listingID}`, corsConfiguration)
     .then((response) => {
-      console.log("highest bidder: ", response);
       setHighestBidder(response.data.user_id);
     })
     .catch((e) => console.log(e));

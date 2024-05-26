@@ -1,5 +1,5 @@
 import { Item } from "../../../helpers/utils";
 
-export default function ViewListingCategory() {
-  return <Item>View Listing Category</Item>;
+export default function ViewListingCategory({category}) {
+  return <Item>{category}</Item>;
 }

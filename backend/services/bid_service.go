@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"sort"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/menothe/shoptions/models"
@@ -26,16 +27,31 @@ func (bs *BidServiceImpl) CreateBid(bidAmount float64, listingID uuid.UUID, user
 	bidder := user.(models.User)
 
 	newBid := models.Bid{
-		BidID: uuid.New(),
-		Amount: bidAmount,
+		BidID:     uuid.New(),
+		Amount:    bidAmount,
 		ListingID: listingID,
-		UserID: bidder.UserID,
+		UserID:    bidder.UserID,
 	}
 
+	//create the bid
 	err := bs.DB.Create(&newBid).Error
 
 	if err != nil {
 		return nil, ErrFailedToCreateBid
+	}
+
+	//increment the bid count for the listing this bid is for
+	var listing models.Listing
+	result := bs.DB.First(&listing, "listing_id = ?", listingID)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil, ErrRecordNotFound
+	}
+	*listing.BidCount += 1
+	listing.UpdatedAt = time.Now()
+	result = bs.DB.Save(&listing)
+
+	if result.Error != nil {
+		return nil, ErrFailedUpdateListing
 	}
 	return &newBid, nil
 }
@@ -50,7 +66,7 @@ func (bs *BidServiceImpl) DetermineHighestBidder(listingID uuid.UUID) (*uuid.UUI
 	}
 	if len(bids) > 0 {
 		//sort all the bids in decreasing order
-	    // Sort the bids slice in decreasing order of price
+		// Sort the bids slice in decreasing order of price
 		sort.Sort(ByPriceDesc(bids))
 
 		highestBid := bids[0] //grab the first one
@@ -61,7 +77,6 @@ func (bs *BidServiceImpl) DetermineHighestBidder(listingID uuid.UUID) (*uuid.UUI
 
 }
 
-
 // ByPriceDesc implements sort.Interface based on the Price field in descending order.
 type ByPriceDesc []models.Bid
 
@@ -69,8 +84,8 @@ func (a ByPriceDesc) Len() int           { return len(a) }
 func (a ByPriceDesc) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByPriceDesc) Less(i, j int) bool { return a[i].Amount > a[j].Amount } // Note the '>' for descending order
 
-//ERRORS
+// ERRORS
 var (
-	ErrFailedToCreateBid = errors.New("unable to create a new bid")
+	ErrFailedToCreateBid           = errors.New("unable to create a new bid")
 	ErrFailedToFetchBidsForListing = errors.New("unable to locate bids for provided listing")
 )

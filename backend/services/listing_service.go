@@ -17,7 +17,7 @@ type ListingService interface {
 	GetUsersListings(uuid.UUID)
 	UpdateListing(*structs.UpdateListingRequestBody, uuid.UUID) error
 	DeleteListing(uuid.UUID) error
-	SearchListingsByQuery(string) (*models.Listing, error)
+	SearchListingsByQuery(string) ([]models.Listing, error)
 }
 
 type ListingServiceImpl struct {
@@ -42,6 +42,7 @@ func (ls *ListingServiceImpl) CreateListing(listingRequest *structs.CreateListin
 		Duration:      listingRequest.Duration,
 		EndTime:       listingRequest.EndTime,
 		ProductImage:  listingRequest.ProductImage,
+		Seller:        seller.Username,
 		CreatedAt:     time.Now(),
 		UpdatedAt:     time.Now(),
 		UserID:        seller.UserID,
@@ -135,8 +136,6 @@ func (ls *ListingServiceImpl) SearchListingsByQuery(query string) ([]models.List
 
 	return listings, nil
 }
-
-
 
 // ERRORS
 
