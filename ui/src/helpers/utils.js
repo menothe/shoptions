@@ -6,6 +6,7 @@ import {
   GET_LISTINGS_BY_USER_SEARCH,
   CREATE_BID,
   GET_HIGHEST_BIDDER,
+  GET_BIDS_SUMMARY,
 } from "../constants";
 import axios from "axios";
 import { NumericFormat } from "react-number-format";
@@ -184,6 +185,17 @@ export const fetchHighestBidder = (listingID, setHighestBidder) => {
     .get(SERVER_HOST + GET_HIGHEST_BIDDER + `/${listingID}`, corsConfiguration)
     .then((response) => {
       setHighestBidder(response.data.user_id);
+    })
+    .catch((e) => console.log(e));
+};
+
+export const fetchBidsSummaryForListing = (e, listingID) => {
+  e.preventDefault();
+  axios
+    .get(SERVER_HOST + GET_BIDS_SUMMARY + `/${listingID}`, corsConfiguration)
+    .then((response) => {
+      console.log("bids summary: ", response.data);
+      // setHighestBidder(response.data.user_id);
     })
     .catch((e) => console.log(e));
 };

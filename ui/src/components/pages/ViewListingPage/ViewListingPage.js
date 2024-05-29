@@ -1,8 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { ListingContext, UserContext } from "../../../contexts";
-import { fetchHighestBidder, submitUserBid } from "../../../helpers/utils";
-import ListingCountdown from "../../ListingCountDown";
+import {
+  fetchBidsSummaryForListing,
+  fetchHighestBidder,
+  submitUserBid,
+} from "../../../helpers/utils";
 import HighestBidder from "../../HighestBidder";
 import ViewListingTitle from "../../ViewListing/ViewListingTitle";
 import ViewListingDescription from "../../ViewListing/ViewListingDescription";
@@ -27,6 +30,7 @@ export default function ViewListingPage() {
     duration,
     endTime,
     seller,
+    bidCount,
   } = listing ?? {};
   const [highestBidder, setHighestBidder] = useState(null);
   // const isHighestBidder = highestBidder === userID;
@@ -66,7 +70,7 @@ export default function ViewListingPage() {
         <Grid sx={{ display: "flex", justifyContent: "space-between" }}>
           <ViewListingTitle title={title} />
           <Grid sx={{ display: "flex", ml: 7 }}>
-            <ViewListingBidCount bidCount={0} />
+            <ViewListingBidCount bidCount={bidCount} />
           </Grid>
         </Grid>
         <ViewListingDescription description={description} />
@@ -83,12 +87,13 @@ export default function ViewListingPage() {
           type="text"
           placeholder="Price"
           onChange={(e) => handleBidAmountChange(e)}
-          value={bidAmount}
+          value={bidAmount || 0}
         />
         <button onClick={handleSubmitBid}>Bid</button>
       </Grid>
+      <button onClick={(e) => fetchBidsSummaryForListing(e, listingID)}>
+        Alex button function
+      </button>
     </Box>
   );
 }
-
-// <Grid item xs={8}>

@@ -14,7 +14,7 @@ import (
 type Server struct {
 	UserHandler    *handlers.UserHandler
 	ListingHandler *handlers.ListingHandler
-	BidHandler *handlers.BidHandler
+	BidHandler     *handlers.BidHandler
 	Router         *gin.Engine
 }
 
@@ -86,7 +86,7 @@ func (server *Server) initializeListingRoutes(apiGroup *gin.RouterGroup) {
 	listingGroup := apiGroup.Group("/listings")
 	listingGroup.Use(func(c *gin.Context) {
 		//Skip authentication for getting all listings
-		if c.Request.URL.Path == "/api/listings/all" || c.Request.URL.Path == "/api/listings/by_query" {
+		if c.Request.URL.Path == "/api/listings/all" || c.Request.URL.Path == "/api/listings/by_query" || c.Request.URL.Path == "/api/listings/bids_summary" {
 			c.Next()
 			return
 		}
@@ -96,7 +96,8 @@ func (server *Server) initializeListingRoutes(apiGroup *gin.RouterGroup) {
 	listingGroup.PUT("/update/:id", server.ListingHandler.UpdateListing)
 	listingGroup.GET("/all", server.ListingHandler.GetAllListings)
 	listingGroup.GET("/by_user", server.ListingHandler.GetUsersListings)
-	listingGroup.POST("by_query", server.ListingHandler.SearchByQuery)
+	listingGroup.POST("/by_query", server.ListingHandler.SearchByQuery)
+	listingGroup.GET("/bids_summary/:id", server.ListingHandler.GetBidsSummary)
 }
 
 func (server *Server) initializeBidRoutes(apiGroup *gin.RouterGroup) {

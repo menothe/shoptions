@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"sort"
 	"strings"
 	"time"
 
@@ -18,6 +19,7 @@ type ListingService interface {
 	UpdateListing(*structs.UpdateListingRequestBody, uuid.UUID) error
 	DeleteListing(uuid.UUID) error
 	SearchListingsByQuery(string) ([]models.Listing, error)
+	GetBidsSummaryForListing(uuid.UUID) (any, error)
 }
 
 type ListingServiceImpl struct {
@@ -137,6 +139,36 @@ func (ls *ListingServiceImpl) SearchListingsByQuery(query string) ([]models.List
 	return listings, nil
 }
 
+func (ls *ListingServiceImpl) GetBidsSummaryForListing(listingId uuid.UUID) (any, error) {
+	summary := struct {
+		BidCount     int     `json:"bidCount"`
+		HighestPrice float64 `json:"highestPrice"`
+	}{}
+
+	var bids []models.Bid
+
+	result := ls.DB.Where("listing_id = ?", listingId).Find(&bids)
+
+	if result.Error != nil {
+		return struct{}{}, ErrFailedToFetchBidsSummary
+	}
+
+	//find bid with highest price
+	var highestBid models.Bid
+	if len(bids) > 0 {
+		//sort all the bids in decreasing order
+		// Sort the bids slice in decreasing order of price
+		sort.Sort(ByPriceDesc(bids))
+
+		highestBid = bids[0] //grab the first one
+	}
+
+	summary.BidCount = len(bids)
+	summary.HighestPrice = highestBid.Amount
+
+	return summary, nil
+}
+
 // ERRORS
 
 var (
@@ -146,4 +178,5 @@ var (
 	ErrFailedUpdateListing        = errors.New("failure updating listing")
 	ErrFailedDeleteListing        = errors.New("failed to delete listing")
 	ErrFailedToFetchUsersListings = errors.New("unable to fetch users listings")
+	ErrFailedToFetchBidsSummary   = errors.New("unable to fetch bids summary")
 )
