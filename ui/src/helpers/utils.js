@@ -7,6 +7,7 @@ import {
   CREATE_BID,
   GET_HIGHEST_BIDDER,
   GET_BIDS_SUMMARY,
+  GET_ALL_LISTINGS,
 } from "../constants";
 import axios from "axios";
 import { NumericFormat } from "react-number-format";
@@ -189,15 +190,38 @@ export const fetchHighestBidder = (listingID, setHighestBidder) => {
     .catch((e) => console.log(e));
 };
 
-export const fetchBidsSummaryForListing = (e, listingID) => {
-  e.preventDefault();
+export const fetchBidsSummaryForListing = (
+  listingID,
+  listings,
+  setListings
+) => {
   axios
     .get(SERVER_HOST + GET_BIDS_SUMMARY + `/${listingID}`, corsConfiguration)
     .then((response) => {
-      console.log("bids summary: ", response.data);
-      // setHighestBidder(response.data.user_id);
+      console.log("response.data: ", response.data);
+      for (let listing of listings) {
+        if (listing.listingID === listingID) {
+          listing.bidCount = response.data.bidCount;
+        }
+      }
+      console.log("listings: ", listings);
+      setListings(listings);
+      window.sessionStorage.setItem("listings", JSON.stringify(listings));
     })
     .catch((e) => console.log(e));
+};
+
+export const fetchAllListings = (setListings) => {
+  const getUserListingsEndpoint = SERVER_HOST + GET_ALL_LISTINGS;
+  axios
+    .get(getUserListingsEndpoint, corsConfiguration)
+    .then((response) => {
+      setListings(response.data);
+      window.sessionStorage.setItem("listings", JSON.stringify(response.data));
+    })
+    .catch((e) => {
+      console.error("err: ", e);
+    });
 };
 
 const corsConfiguration = {

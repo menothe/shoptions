@@ -1,37 +1,18 @@
 import { useEffect, useContext } from "react";
 import FuzzySearch from "../../FuzzySearch";
-import { GET_ALL_LISTINGS, SERVER_HOST } from "../../../constants";
-import axios from "axios";
 import ListingCard from "../../ListingCard";
 import { ListingContext } from "../../../contexts";
+import { fetchAllListings } from "../../../helpers/utils";
 
 export default function HomePage() {
   const [listings, setListings] = useContext(ListingContext);
-  const getUserListingsEndpoint = SERVER_HOST + GET_ALL_LISTINGS;
 
   useEffect(() => {
     const sessionStorageListings = JSON.parse(
       window.sessionStorage.getItem("listings")
     );
     if (!sessionStorageListings?.length) {
-      axios
-        .get(getUserListingsEndpoint, {
-          withCredentials: true,
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          setListings(response.data);
-          window.sessionStorage.setItem(
-            "listings",
-            JSON.stringify(response.data)
-          );
-        })
-        .catch((e) => {
-          console.error("err: ", e);
-        });
+      fetchAllListings(setListings);
     } else {
       setListings(sessionStorageListings);
     }

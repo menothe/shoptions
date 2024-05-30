@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { ListingContext, UserContext } from "../../../contexts";
 import {
+  fetchAllListings,
   fetchBidsSummaryForListing,
   fetchHighestBidder,
   submitUserBid,
@@ -39,10 +40,26 @@ export default function ViewListingPage() {
     if (window.sessionStorage.length) {
       setListings(JSON.parse(window.sessionStorage.getItem("listings")));
     } else if (listings.length) {
-      window.sessionStorage.setItem("listings", listings);
+      window.sessionStorage.setItem("listings", JSON.stringify(listings));
+    } else {
+      fetchAllListings(setListings);
     }
     fetchHighestBidder(listingID, setHighestBidder);
   }, []);
+
+  useEffect(() => {
+    // Set up the interval
+    const bidSummaryPoll = setInterval(
+      () => fetchBidsSummaryForListing(listingID, listings, setListings),
+      10000
+    ); // 3000ms = 3 second
+
+    // Clean up the interval on component unmount
+    return () => {
+      clearInterval(bidSummaryPoll);
+    };
+  }, [listing]);
+
   const handleSubmitBid = (e) => {
     e.preventDefault();
     if (!loggedIn) {
@@ -91,9 +108,6 @@ export default function ViewListingPage() {
         />
         <button onClick={handleSubmitBid}>Bid</button>
       </Grid>
-      <button onClick={(e) => fetchBidsSummaryForListing(e, listingID)}>
-        Alex button function
-      </button>
     </Box>
   );
 }
