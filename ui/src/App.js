@@ -24,6 +24,11 @@ function App() {
     if (document.cookie.length) {
       setLoggedIn(true);
     }
+    /*
+    return statement/AKA component unmount:
+    we will return a function which will grab all the data
+    from context and store it in session storage.
+    */
   }, []);
 
   return (

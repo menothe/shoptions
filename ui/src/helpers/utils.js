@@ -193,19 +193,19 @@ export const fetchHighestBidder = (listingID, setHighestBidder) => {
 export const fetchBidsSummaryForListing = (
   listingID,
   listings,
-  setListings
+  setListings,
+  setBidCount
 ) => {
   axios
     .get(SERVER_HOST + GET_BIDS_SUMMARY + `/${listingID}`, corsConfiguration)
     .then((response) => {
-      console.log("response.data: ", response.data);
       for (let listing of listings) {
         if (listing.listingID === listingID) {
           listing.bidCount = response.data.bidCount;
         }
       }
-      console.log("listings: ", listings);
       setListings(listings);
+      setBidCount(response.data.bidCount);
       window.sessionStorage.setItem("listings", JSON.stringify(listings));
     })
     .catch((e) => console.log(e));

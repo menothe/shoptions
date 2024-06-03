@@ -22,7 +22,8 @@ export default function ViewListingPage() {
   const navigate = useNavigate();
   const { listingID } = useParams();
   const [listings, setListings] = useContext(ListingContext);
-  let listing = listings.filter((item) => item.listingID === listingID)[0];
+  const listing = listings.filter((item) => item.listingID === listingID)[0];
+  const [bidCount, setBidCount] = useState(listing?.bidCount);
   const {
     title,
     description,
@@ -31,13 +32,12 @@ export default function ViewListingPage() {
     duration,
     endTime,
     seller,
-    bidCount,
   } = listing ?? {};
   const [highestBidder, setHighestBidder] = useState(null);
   // const isHighestBidder = highestBidder === userID;
 
   useEffect(() => {
-    if (window.sessionStorage.length) {
+    if (window.sessionStorage.length !== 2) {
       setListings(JSON.parse(window.sessionStorage.getItem("listings")));
     } else if (listings.length) {
       window.sessionStorage.setItem("listings", JSON.stringify(listings));
@@ -50,7 +50,13 @@ export default function ViewListingPage() {
   useEffect(() => {
     // Set up the interval
     const bidSummaryPoll = setInterval(
-      () => fetchBidsSummaryForListing(listingID, listings, setListings),
+      () =>
+        fetchBidsSummaryForListing(
+          listingID,
+          listings,
+          setListings,
+          setBidCount
+        ),
       10000
     ); // 3000ms = 3 second
 
@@ -58,7 +64,11 @@ export default function ViewListingPage() {
     return () => {
       clearInterval(bidSummaryPoll);
     };
-  }, [listing]);
+  }, [listing, bidCount]);
+
+  useEffect(() => {
+    setListings(listings);
+  }, [listings]);
 
   const handleSubmitBid = (e) => {
     e.preventDefault();
@@ -87,7 +97,7 @@ export default function ViewListingPage() {
         <Grid sx={{ display: "flex", justifyContent: "space-between" }}>
           <ViewListingTitle title={title} />
           <Grid sx={{ display: "flex", ml: 7 }}>
-            <ViewListingBidCount bidCount={bidCount} />
+            <ViewListingBidCount bidCount={listing?.bidCount} />
           </Grid>
         </Grid>
         <ViewListingDescription description={description} />
