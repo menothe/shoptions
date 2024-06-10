@@ -7,7 +7,7 @@ import {
   fetchHighestBidder,
   submitUserBid,
 } from "../../../helpers/utils";
-import HighestBidder from "../../HighestBidder";
+import HighestBid from "../../HighestBid";
 import ViewListingTitle from "../../ViewListing/ViewListingTitle";
 import ViewListingDescription from "../../ViewListing/ViewListingDescription";
 import ViewListingBidCount from "../../ViewListing/ViewListingBidCount";
@@ -24,6 +24,7 @@ export default function ViewListingPage() {
   const [listings, setListings] = useContext(ListingContext);
   const listing = listings.filter((item) => item.listingID === listingID)[0];
   const [bidCount, setBidCount] = useState(listing?.bidCount);
+  const [highestBid, setHighestBid] = useState(listing?.startingPrice);
   const {
     title,
     description,
@@ -33,8 +34,6 @@ export default function ViewListingPage() {
     endTime,
     seller,
   } = listing ?? {};
-  const [highestBidder, setHighestBidder] = useState(null);
-  // const isHighestBidder = highestBidder === userID;
 
   useEffect(() => {
     if (window.sessionStorage.length !== 2) {
@@ -44,7 +43,6 @@ export default function ViewListingPage() {
     } else {
       fetchAllListings(setListings);
     }
-    fetchHighestBidder(listingID, setHighestBidder);
   }, []);
 
   useEffect(() => {
@@ -55,7 +53,8 @@ export default function ViewListingPage() {
           listingID,
           listings,
           setListings,
-          setBidCount
+          setBidCount,
+          setHighestBid
         ),
       10000
     ); // 3000ms = 3 second
@@ -96,9 +95,15 @@ export default function ViewListingPage() {
       <Grid container spacing={2} sx={{ flexDirection: "column" }}>
         <Grid sx={{ display: "flex", justifyContent: "space-between" }}>
           <ViewListingTitle title={title} />
-          <Grid sx={{ display: "flex", ml: 7 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            {highestBid ? <HighestBid bid={highestBid} /> : null}
             <ViewListingBidCount bidCount={listing?.bidCount} />
-          </Grid>
+          </div>
         </Grid>
         <ViewListingDescription description={description} />
         <ViewListingPhotoGrid />
@@ -109,7 +114,6 @@ export default function ViewListingPage() {
           username={seller}
           endTime={endTime}
         />
-        {highestBidder ? <HighestBidder /> : null}
         <input
           type="text"
           placeholder="Price"

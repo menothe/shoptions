@@ -8,6 +8,7 @@ import {
   GET_HIGHEST_BIDDER,
   GET_BIDS_SUMMARY,
   GET_ALL_LISTINGS,
+  GET_HIGHEST_BID,
 } from "../constants";
 import axios from "axios";
 import { NumericFormat } from "react-number-format";
@@ -194,7 +195,8 @@ export const fetchBidsSummaryForListing = (
   listingID,
   listings,
   setListings,
-  setBidCount
+  setBidCount,
+  setHighestBid
 ) => {
   axios
     .get(SERVER_HOST + GET_BIDS_SUMMARY + `/${listingID}`, corsConfiguration)
@@ -202,10 +204,12 @@ export const fetchBidsSummaryForListing = (
       for (let listing of listings) {
         if (listing.listingID === listingID) {
           listing.bidCount = response.data.bidCount;
+          listing.highestBid = response.data.highestPrice;
         }
       }
       setListings(listings);
       setBidCount(response.data.bidCount);
+      setHighestBid(response.data.highestPrice);
       window.sessionStorage.setItem("listings", JSON.stringify(listings));
     })
     .catch((e) => console.log(e));
